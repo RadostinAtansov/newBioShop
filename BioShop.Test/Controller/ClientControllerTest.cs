@@ -23,7 +23,7 @@
             //Arrange
             List<ClientViewModel> clientList = await GetClientsData();
             _clientServiceFake.Setup(x => x
-                .GetClintByIdFromDb(1))
+                .GetClientByIdFromDb(1))
                 .ReturnsAsync(clientList[0]);
             ClientController clientController = new ClientController(_clientServiceFake.Object);
 
@@ -45,17 +45,17 @@
             List<ClientViewModel> clientList = await GetClientsData();
             _clientServiceFake.Setup(x => x
                 .ViewAllClientProducts(3))
-                .ReturnsAsync(clientList);
+                .ReturnsAsync(clientList[2]);
             ClientController clientController = new ClientController(_clientServiceFake.Object);
 
             //Act
             var clientResult = await clientController.ViewAllClientProducts(3);
-            var clientResultModel = ((ObjectResult)clientResult).Value as List<ClientViewModel>;
+            var clientResultModel = ((ObjectResult)clientResult).Value as ClientViewModel;
 
             //Assert
             Assert.NotNull(clientResult);
             Assert.IsType<OkObjectResult>(clientResult);
-            Assert.True(clientResultModel[2].Products.Count > 0);
+            Assert.True(clientResultModel.Products.Count > 0);
         }
 
         [Fact]
@@ -84,9 +84,18 @@
 
             //Assert
             Assert.IsType<OkObjectResult>(clientResult);
-            Assert.NotNull(clientResult);
-            Assert.Equal(clientResultModel.Id, fakeClient.Id);
-            Assert.True(clientResultModel.Id == fakeClient.Id);
+        }
+
+        [Fact]
+        public async Task AddClientToDBAndReturnArgumentNullException()
+        {
+            //Arrange
+            ClientViewModel fakeClient = null;
+            var clientController = new ClientController(_clientServiceFake.Object);
+            
+            //Act
+            //Assert
+            await Assert.ThrowsAsync<ArgumentNullException>(() => clientController.AddClientToShop(fakeClient));
         }
 
         [Fact]
@@ -94,12 +103,24 @@
         {
             //Arrange
              List<ClientViewModel> clientList = await GetClientsData();
+            int clientId = 3;
+            var fakeProduct = new ProductViewModel()
+            {
+                Id = 1,
+                Name = "Torta4",
+                Expires = DateTime.Now.AddDays(31),
+                Ingredients = "Choco, Milk, Eggs1",
+                Price = 12,
+                MadeInCountry = "Bg1",
+                RecipesProduct = new List<RecipeViewModel>(),
+
+            };
             _clientServiceFake.Setup(x => x
-            .AddProductToClient(clientList[2].Products[0], clientList[2].Id));
+            .AddProductToClient(fakeProduct, clientId));
             var clientController = new ClientController(_clientServiceFake.Object);
 
             //Act
-            var clientResult = await clientController.AddProductToClient(clientList[2].Products[0], clientList[2].Id);
+            var clientResult = await clientController.AddProductToClient(fakeProduct, clientId);
 
             //Assert
             Assert.IsType<OkResult>(clientResult);
@@ -107,22 +128,35 @@
         }
 
         [Fact]
-        public async Task RemoveProductFromClientAndReturnOkResult()
+        public async Task AddProductToClientAndReturnArgumentNullExceptionIfNull()
         {
             //Arrange
+            int clientId = 3;
             List<ClientViewModel> clientList = await GetClientsData();
-            var product = clientList[2].Products[0].Id;
-
-            _clientServiceFake.Setup(x => x
-            .RemoveProductFromClient(product, clientList[2].Id));
             var clientController = new ClientController(_clientServiceFake.Object);
 
             //Act
-            var clientResult = await clientController.RemoveProductFromClient(product, clientList[2].Id);
+            //Assert
+            await Assert.ThrowsAsync<ArgumentNullException>(() => clientController.AddProductToClient(null, clientId));
+        }
+
+        [Fact]
+        public async Task RemoveProductFromClientAndReturnOkResult()
+        {
+            //Arrange
+            int clientId = 3;
+            var productId = 1;
+            List<ClientViewModel> clientList = await GetClientsData();
+
+            _clientServiceFake.Setup(x => x
+            .RemoveProductFromClient(clientId, productId));
+            var clientController = new ClientController(_clientServiceFake.Object);
+
+            //Act
+            var clientResult = await clientController.RemoveProductFromClient(clientId, productId);
 
             //Assert
             Assert.IsType<OkResult>(clientResult);
-
         }
 
         private async Task<List<ClientViewModel>> GetClientsData()

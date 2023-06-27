@@ -16,7 +16,6 @@
 
         public async Task<ClientViewModel> AddClient(ClientViewModel client)
         {
-
             var newClient = new Client()
             {
                 Name = client.Name,
@@ -28,7 +27,7 @@
             await _dataContext.Clients.AddAsync(newClient);
             await _dataContext.SaveChangesAsync();
 
-            var newClient2 = new ClientViewModel()
+            var returnAddedClient = new ClientViewModel()
             {
                 Name = newClient.Name,
                 Car = newClient.Car,
@@ -36,8 +35,8 @@
                 Money = newClient.Money,
             };
 
-            return newClient2;
-        } // Yes
+            return returnAddedClient;
+        }
 
         public async Task AddProductToClient(ProductViewModel product, int id)
         {
@@ -53,17 +52,21 @@
             await _dataContext.Products.AddAsync(newProduct);
             await _dataContext.SaveChangesAsync();
 
+            var client = await _dataContext.Clients.FindAsync(id);
+
+            ArgumentNullException.ThrowIfNull(client);
+
             var clientProduct = new ClientProduct()
             {
-                ClientId = id,
+                ClientId = client.Id,
                 ProductId = newProduct.Id
             };
 
             await _dataContext.ClientProducts.AddAsync(clientProduct);
             await _dataContext.SaveChangesAsync();
-        } //Yes
+        }
 
-        public async Task<ClientViewModel> GetClintByIdFromDb(int id)
+        public async Task<ClientViewModel> GetClientByIdFromDb(int id)
         {
             var client =  await _dataContext.Clients.FindAsync(id);
 
@@ -78,7 +81,7 @@
             };
 
             return newClient;
-        } // Yes
+        }
 
         public async Task RemoveProductFromClient(int clientId, int productId)
         {
@@ -91,26 +94,32 @@
             await _dataContext.SaveChangesAsync();
         }
 
-        public async Task<ICollection<ClientViewModel>> ViewAllClientProducts(int id)
+        public async Task<ClientViewModel> ViewAllClientProducts(int id)
         {
-            var clientProducts = _dataContext.Clients.Where(c => c.Id == id)
+            var client = await _dataContext.Clients.FindAsync(id);
+
+            ArgumentNullException.ThrowIfNull(client);
+
+            var clientProducts = _dataContext.Clients.Where(c => c.Id == client.Id)
                 .Select(c => new ClientViewModel()
                 {
+                    Id = c.Id,
                     Name = c.Name,
                     City = c.City,
                     Money = c.Money,
                     Car = c.Car,
                     Products = c.Clients_Products.Where(p => p.ClientId == id).Select(n => new ProductViewModel()
                     {
+                        Id = n.Product.Id,
                         Name = n.Product.Name,
                         Expires = n.Product.Expires,
                         Price = n.Product.Price,
                         Ingredients = n.Product.Ingredients,
                         MadeInCountry = n.Product.MadeInCountry,
                     }).ToList()
-            }).ToList();
+            }).FirstOrDefaultAsync();
 
-            return clientProducts;
-        } // Yes
+            return await clientProducts;
+        } 
     }
 }

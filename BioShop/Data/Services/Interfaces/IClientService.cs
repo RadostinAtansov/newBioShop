@@ -1,5 +1,4 @@
-﻿
-namespace BioShop.Data.Services.Interfaces
+﻿namespace BioShop.Data.Services.Interfaces
 {
     using BioShop.Data.ViewModels;
 
@@ -9,10 +8,10 @@ namespace BioShop.Data.Services.Interfaces
 
         Task RemoveProductFromClient(int clientId, int productId);
 
-        Task<ICollection<ClientViewModel>> ViewAllClientProducts(int id);
+        Task<ClientViewModel> ViewAllClientProducts(int id);
 
         Task<ClientViewModel> AddClient(ClientViewModel client);
 
-        Task<ClientViewModel> GetClintByIdFromDb(int id);
+        Task<ClientViewModel> GetClientByIdFromDb(int id);
     }
 }
