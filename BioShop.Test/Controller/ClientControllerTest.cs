@@ -1,12 +1,12 @@
 ﻿namespace BioShop.Test.Controller
 {
+    using Moq;
     using Xunit;
+    using System;
     using BioShop.Controllers;
-    using BioShop.Data.Services.Interfaces;
     using BioShop.Data.ViewModels;
     using Microsoft.AspNetCore.Mvc;
-    using Moq;
-    using System;
+    using BioShop.Data.Services.Interfaces;
 
     public class ClientControllerTest
     {
@@ -227,6 +227,5 @@
 
             return clientsData;
         }
-
     }
 }

@@ -1,10 +1,9 @@
-﻿
-namespace BioShop.Data.Services
+﻿namespace BioShop.Data.Services
 {
     using BioShop.Data.Models;
-    using BioShop.Data.Services.Interfaces;
     using BioShop.Data.ViewModels;
     using Microsoft.EntityFrameworkCore;
+    using BioShop.Data.Services.Interfaces;
 
     public class ProductService : IProductService
     {
@@ -39,11 +38,15 @@ namespace BioShop.Data.Services
             }).ToList();
 
             return allProducts;
-        }
+        } //Yes
 
-        public async Task<ProductViewModel> GetProductById(int productId)
+        public async Task<ProductViewModel> GetProductByIdAndAllHisRecipes(int productId)
         {
-            var product = _dataContext.Products.Where(p => p.Id == productId).Select(n => new ProductViewModel()
+            var product = _dataContext.Products.FindAsync(productId);
+
+            ArgumentNullException.ThrowIfNull(product);
+
+            var productAndRecipes = _dataContext.Products.Where(p => p.Id == productId).Select(n => new ProductViewModel()
             {
                   Name = n.Name,
                   Price = n.Price,
@@ -62,10 +65,9 @@ namespace BioShop.Data.Services
 
             }).FirstOrDefaultAsync();
 
-            ArgumentNullException.ThrowIfNull(product);
 
-            return await product;
-        }
+            return await productAndRecipes;
+        } //Yes
 
         public async Task<IEnumerable<ProductViewModel>> GetAllProducts()
         {
@@ -79,11 +81,14 @@ namespace BioShop.Data.Services
             }).ToListAsync();
 
             return await allProducts;
-        }
+        } //Yes
 
-        public async Task<Product> UpdateProduct(int id, ProductViewModel newProduct)
+        public async Task<ProductViewModel> UpdateProduct(int id, ProductViewModel newProduct)
         {
             var product = await _dataContext.Products.FindAsync(id);
+
+            ArgumentNullException.ThrowIfNull(product);
+
             product.Name = newProduct.Name;
             product.Price = newProduct.Price;
             product.Expires = newProduct.Expires;
@@ -92,12 +97,23 @@ namespace BioShop.Data.Services
 
             this._dataContext.SaveChanges();
 
-            return product;
-        }
+            var updatedProduct = _dataContext.Products.Select(n => new ProductViewModel()
+            {
+                Name = n.Name,
+                Price = n.Price,
+                Expires = n.Expires,
+                Ingredients = n.Ingredients,
+                MadeInCountry = n.MadeInCountry,
+            }).FirstOrDefaultAsync(f => f.Id == id);
+
+            return await updatedProduct;
+        } //Yes
 
         public async Task DeleteProductById(int id)
         {
             var product = await _dataContext.Products.FindAsync(id);
+
+            ArgumentNullException.ThrowIfNull(product);
 
             _dataContext.Products.Remove(product);
             await _dataContext.SaveChangesAsync();

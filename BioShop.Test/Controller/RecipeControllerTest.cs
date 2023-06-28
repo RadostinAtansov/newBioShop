@@ -8,11 +8,11 @@
     using Moq;
     using Xunit;
 
-    public class RecipeController
+    public class RecipeControllerTest
     {
         private readonly Mock<IRecipeService> _recipeServiceFake;
 
-        public RecipeController()
+        public RecipeControllerTest()
         {
             _recipeServiceFake = new Mock<IRecipeService>();
         }

@@ -26,9 +26,9 @@
         }
 
         [HttpGet("get-product-by-id/{id}")]
-        public async Task<IActionResult> GetProductById(int id)
+        public async Task<IActionResult> GetProductByIdAndAllHisRecipes(int id)
         {
-            var product = await _productService.GetProductById(id);
+            var product = await _productService.GetProductByIdAndAllHisRecipes(id);
 
             if (product != null)
             {
@@ -43,6 +43,8 @@
         [HttpPost("add-product-to-shop")]
         public async Task<IActionResult> AddProductToShop([FromBody] ProductViewModel product)
         {
+            ArgumentNullException.ThrowIfNull(product);
+
             var returnAllProducts = await _productService.AddProduct(product);
 
             return Ok(returnAllProducts);

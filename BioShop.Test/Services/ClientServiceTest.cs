@@ -209,7 +209,6 @@
             //Act
             //Assert
             await Assert.ThrowsAsync<ArgumentNullException>(() => clientController.ViewAllClientProducts(clientid));
-
         }
 
         [Fact]
@@ -228,7 +227,6 @@
 
             //Assert
             Assert.True(clientResultModel.Products.Count > 0);
-
         }
 
         private async Task<List<ClientViewModel>> GetClientsData()
