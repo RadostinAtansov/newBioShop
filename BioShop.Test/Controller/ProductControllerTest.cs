@@ -11,10 +11,7 @@
     {
         private readonly Mock<IProductService> _productService;
 
-        public ProductControllerTest()
-        {
-            _productService = new Mock<IProductService>();
-        }
+        public ProductControllerTest() => _productService = new Mock<IProductService>();
 
         [Fact]
         public async Task GetAllProductReturnAllProducts()

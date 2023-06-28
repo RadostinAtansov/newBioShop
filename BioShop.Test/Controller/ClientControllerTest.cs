@@ -12,10 +12,7 @@
     {
         private readonly Mock<IClientService> _clientServiceFake;
 
-        public ClientControllerTest()
-        {
-            _clientServiceFake = new Mock<IClientService>();
-        }
+        public ClientControllerTest() => _clientServiceFake = new Mock<IClientService>();
 
         [Fact]
         public async Task GetClientByIdAndReturnClientBySpecificId()

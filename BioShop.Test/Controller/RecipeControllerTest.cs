@@ -11,10 +11,7 @@
     {
         private readonly Mock<IRecipeService> _recipeServiceFake;
 
-        public RecipeControllerTest()
-        {
-            _recipeServiceFake = new Mock<IRecipeService>();
-        }
+        public RecipeControllerTest() => _recipeServiceFake = new Mock<IRecipeService>();
 
         [Fact]
         public async Task GetRecipesByIdReturnRecipeAndOkResult()

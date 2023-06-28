@@ -1,16 +1,16 @@
 ﻿namespace BioShop.Controllers
 {
-    using BioShop.Data.Services.Interfaces;
     using BioShop.Data.ViewModels;
     using Microsoft.AspNetCore.Mvc;
+    using BioShop.Data.Services.Interfaces;
 
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthController : ControllerBase
+    public class AuthorizationController : ControllerBase
     {
-        private readonly IUserService _userService;
+        private readonly IAuthorizationUserService _userService;
 
-        public AuthController(IUserService userService)
+        public AuthorizationController(IAuthorizationUserService userService)
         {
             _userService = userService;
         }

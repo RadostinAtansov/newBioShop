@@ -1,9 +1,9 @@
 ﻿namespace BioShop.Controllers
 {
-    using BioShop.Data.Services.Interfaces;
     using BioShop.Data.ViewModels;
-    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using BioShop.Data.Services.Interfaces;
+    using Microsoft.AspNetCore.Authorization;
 
     [Route("api/[controller]")]
     [ApiController]

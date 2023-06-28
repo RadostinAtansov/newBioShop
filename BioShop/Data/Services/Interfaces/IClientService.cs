@@ -4,14 +4,14 @@
 
     public interface IClientService
     {
-        Task AddProductToClient(ProductViewModel product, int id);
-
-        Task RemoveProductFromClient(int clientId, int productId);
+        Task<ClientViewModel> GetClientByIdFromDb(int id);
 
         Task<ClientViewModel> ViewAllClientProducts(int id);
 
         Task<ClientViewModel> AddClient(ClientViewModel client);
 
-        Task<ClientViewModel> GetClientByIdFromDb(int id);
+        Task RemoveProductFromClient(int clientId, int productId);
+
+        Task AddProductToClient(ProductViewModel product, int id);
     }
 }

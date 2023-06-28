@@ -38,7 +38,7 @@
             }).ToList();
 
             return allProducts;
-        } //Yes
+        }
 
         public async Task<ProductViewModel> GetProductByIdAndAllHisRecipes(int productId)
         {
@@ -67,7 +67,7 @@
 
 
             return await productAndRecipes;
-        } //Yes
+        }
 
         public async Task<IEnumerable<ProductViewModel>> GetAllProducts()
         {
@@ -81,7 +81,7 @@
             }).ToListAsync();
 
             return await allProducts;
-        } //Yes
+        }
 
         public async Task<ProductViewModel> UpdateProduct(int id, ProductViewModel newProduct)
         {
@@ -107,7 +107,7 @@
             }).FirstOrDefaultAsync(f => f.Id == id);
 
             return await updatedProduct;
-        } //Yes
+        } 
 
         public async Task DeleteProductById(int id)
         {
