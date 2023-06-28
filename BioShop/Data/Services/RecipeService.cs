@@ -1,9 +1,9 @@
 ﻿namespace BioShop.Data.Services
 {
     using BioShop.Data.Models;
-    using BioShop.Data.Services.Interfaces;
     using BioShop.Data.ViewModels;
     using Microsoft.EntityFrameworkCore;
+    using BioShop.Data.Services.Interfaces;
 
     public class RecipeService : IRecipeService
     {
@@ -12,6 +12,16 @@
         public RecipeService(BioShopDataContext dataContext)
         {
             _dataContext = dataContext;
+        }
+
+        public async Task DeleteRecipe(int id)
+        {
+            var recipe = await _dataContext.Recipes.FindAsync(id);
+
+            ArgumentNullException.ThrowIfNull(recipe, "This recipe not exist");
+
+             _dataContext.Recipes.Remove(recipe);
+            await _dataContext.SaveChangesAsync();
         }
         
         public async Task AddRecipeToProduct(int productId, int recipeId)
@@ -30,6 +40,9 @@
 
         public async Task AddRecipeToDatabase(RecipeViewModel recipe)
         {
+
+            ArgumentNullException.ThrowIfNull(recipe);
+
             var newRecipe = new Recipe()
             {
                 Size = recipe.Size,
@@ -59,13 +72,6 @@
             }).ToListAsync();
 
             return allRecipes;
-        }
-
-        public async Task DeleteRecipe(int id)
-        {
-            var recipe = await _dataContext.Recipes.FindAsync(id);
-             _dataContext.Recipes.Remove(recipe);
-            await _dataContext.SaveChangesAsync();
         }
 
         public async Task<RecipeViewModel> GetRecipeById(int id)

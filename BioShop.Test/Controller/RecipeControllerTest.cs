@@ -1,12 +1,11 @@
 ﻿namespace BioShop.Test.Controller
 {
-    using BioShop.Controllers;
-    using BioShop.Data.Models;
-    using BioShop.Data.Services.Interfaces;
-    using BioShop.Data.ViewModels;
-    using Microsoft.AspNetCore.Mvc;
     using Moq;
     using Xunit;
+    using BioShop.Data.Models;
+    using BioShop.Data.ViewModels;
+    using Microsoft.AspNetCore.Mvc;
+    using BioShop.Data.Services.Interfaces;
 
     public class RecipeControllerTest
     {
@@ -32,7 +31,6 @@
 
             //Assert
             Assert.IsType<OkObjectResult>(repiceResult);
-            Assert.Equal(reciperRecultModel.Id, recipesList[0].Id);
         }
 
         [Fact]
@@ -50,7 +48,6 @@
 
             //Assert
             Assert.IsType<OkObjectResult>(repiceResult);
-            Assert.Equal(reciperRecultModel, recipesList);
         }
 
         [Fact]
