@@ -1,6 +1,8 @@
-﻿namespace BioShop.Data.ViewModels
+﻿namespace BioShop.Data.ViewModels.ProductModels
 {
-    public class ProductViewModel
+    using BioShop.Data.ViewModels.RecipeModel;
+
+    public class AllRecipesProductViewModel
     {
         public int Id { get; set; }
 
@@ -14,6 +16,6 @@
 
         public string? Ingredients { get; set; }
 
-        public List<RecipeViewModel> RecipesProduct { get; set; }
+        public List<AllRecipesOnProductViewModel> RecipesProduct { get; set; }
     }
 }

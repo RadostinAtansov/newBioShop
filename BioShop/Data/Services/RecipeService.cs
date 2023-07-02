@@ -1,9 +1,10 @@
 ﻿namespace BioShop.Data.Services
 {
     using BioShop.Data.Models;
-    using BioShop.Data.ViewModels;
     using Microsoft.EntityFrameworkCore;
     using BioShop.Data.Services.Interfaces;
+    using BioShop.Data.ViewModels.RecipeModel;
+    using Microsoft.AspNetCore.Mvc;
 
     public class RecipeService : IRecipeService
     {
@@ -38,30 +39,31 @@
             this._dataContext.SaveChangesAsync();
         }
 
-        public async Task AddRecipeToDatabase(RecipeViewModel recipe)
+        public async Task AddRecipeToDatabase([FromBody] AddRecipeViewModel recipe)
         {
 
             ArgumentNullException.ThrowIfNull(recipe);
 
             var newRecipe = new Recipe()
             {
+                Id = recipe.Id,
                 Size = recipe.Size,
                 Portions = recipe.Portions,
                 ProductName = recipe.RecipeName,
                 TimeYouNeedToBeMade = recipe.TimeYouNeedToBeMade,
                 NecesseryProductsAndQuantity = recipe.NecesseryProductsAndQuantity,
                 DesciptionStepByStepHowToBeMade = recipe.DesciptionStepByStepHowToBeMade,
-                
             };
 
             await _dataContext.Recipes.AddAsync(newRecipe);
             await _dataContext.SaveChangesAsync();
         }
 
-        public async Task<ICollection<RecipeViewModel>> ShowAllRecipes()
+        public async Task<ICollection<AllRecipesOnProductViewModel>> ShowAllRecipes()
         {
-            var allRecipes = await _dataContext.Recipes.Select(n => new RecipeViewModel()
+            var allRecipes = await _dataContext.Recipes.Select(n => new AllRecipesOnProductViewModel()
             {
+                Id = n.Id,
                 RecipeName = n.ProductName,
                 Size = n.Size,
                 Portions = n.Portions,
@@ -74,10 +76,11 @@
             return allRecipes;
         }
 
-        public async Task<RecipeViewModel> GetRecipeById(int id)
+        public async Task<AllRecipesOnProductViewModel> GetRecipeById(int id)
         {
-            var recipe = await _dataContext.Recipes.Where(i => i.Id == id).Select(n => new RecipeViewModel()
+            var recipe = await _dataContext.Recipes.Where(i => i.Id == id).Select(n => new AllRecipesOnProductViewModel()
             {
+                Id = n.Id,
                 Size = n.Size,
                 Portions = n.Portions,
                 RecipeName = n.ProductName,

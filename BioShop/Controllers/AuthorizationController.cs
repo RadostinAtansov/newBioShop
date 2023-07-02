@@ -1,8 +1,8 @@
 ﻿namespace BioShop.Controllers
 {
-    using BioShop.Data.ViewModels;
     using Microsoft.AspNetCore.Mvc;
     using BioShop.Data.Services.Interfaces;
+    using BioShop.Data.ViewModels.UserModels;
 
     [Route("api/[controller]")]
     [ApiController]

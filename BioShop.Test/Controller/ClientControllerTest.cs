@@ -4,9 +4,11 @@
     using Xunit;
     using System;
     using BioShop.Controllers;
-    using BioShop.Data.ViewModels;
     using Microsoft.AspNetCore.Mvc;
     using BioShop.Data.Services.Interfaces;
+    using BioShop.Data.ViewModels.ProductModel;
+    using BioShop.Data.ViewModels.ProductModels;
+    using BioShop.Data.ViewModels.RecipeModel;
 
     public class ClientControllerTest
     {
@@ -66,7 +68,7 @@
                 Car = "Honda",
                 City = "Shumen",
                 Money = 20,
-                Products = new List<ProductViewModel>()
+                Products = new List<AllRecipesProductViewModel>()
             };
 
             List<ClientViewModel> clientList = await GetClientsData();
@@ -101,7 +103,7 @@
             //Arrange
              List<ClientViewModel> clientList = await GetClientsData();
             int clientId = 3;
-            var fakeProduct = new ProductViewModel()
+            var fakeProduct = new AllRecipesProductViewModel()
             {
                 Id = 1,
                 Name = "Torta4",
@@ -109,7 +111,7 @@
                 Ingredients = "Choco, Milk, Eggs1",
                 Price = 12,
                 MadeInCountry = "Bg1",
-                RecipesProduct = new List<RecipeViewModel>(),
+                RecipesProduct = new List<AllRecipesOnProductViewModel>(),
 
             };
             _clientServiceFake.Setup(x => x
@@ -167,7 +169,7 @@
                     Car = "Opel",
                     City = "Shumen",
                     Money = 0,
-                    Products = new List<ProductViewModel>(),
+                    Products = new List<AllRecipesProductViewModel>(),
                 },
                  new ClientViewModel()
                 {
@@ -176,7 +178,7 @@
                     Car = "Audi",
                     City = "Sofia",
                     Money = 100000,
-                    Products = new List<ProductViewModel>(),
+                    Products = new List<AllRecipesProductViewModel>(),
                 },
                   new ClientViewModel()
                 {
@@ -185,9 +187,9 @@
                     Car = "BMW",
                     City = "Montana",
                     Money = 10500, 
-                    Products = new List<ProductViewModel>()
+                    Products = new List<AllRecipesProductViewModel>()
                     {
-                        new ProductViewModel()
+                        new AllRecipesProductViewModel()
                         {
                             Id = 1,
                             Name = "Torta1",
@@ -195,10 +197,10 @@
                             Ingredients = "Choco, Milk, Eggs1",
                             Price = 12,
                             MadeInCountry = "Bg1",
-                            RecipesProduct = new List<RecipeViewModel>(),
+                            RecipesProduct = new List<AllRecipesOnProductViewModel>(),
                             
                         },
-                        new ProductViewModel()
+                        new AllRecipesProductViewModel()
                         {
                             Id = 2,
                             Name = "Torta2",
@@ -206,9 +208,9 @@
                             Ingredients = "Choco, Milk, Eggs2",
                             Price = 12,
                             MadeInCountry = "Bg2",
-                            RecipesProduct = new List<RecipeViewModel>(),
+                            RecipesProduct = new List<AllRecipesOnProductViewModel>(),
                         },
-                        new ProductViewModel()
+                        new AllRecipesProductViewModel()
                         {
                             Id = 3,
                             Name = "Torta3",
@@ -216,7 +218,7 @@
                             Ingredients = "Choco, Milk, Eggs3",
                             Price = 12,
                             MadeInCountry = "Bg3",
-                            RecipesProduct = new List<RecipeViewModel>(),
+                            RecipesProduct = new List<AllRecipesOnProductViewModel>(),
                         },
                     },
                 },

@@ -1,8 +1,7 @@
-﻿using BioShop.Data.Models;
-
-namespace BioShop.Data.ViewModels
+﻿namespace BioShop.Data.ViewModels.ClientModels
 {
-    public class ClientViewModel
+
+    public class AddClientToShopViewModel
     {
         public int Id { get; set; }
 
@@ -13,7 +12,5 @@ namespace BioShop.Data.ViewModels
         public string City { get; set; }
 
         public string Car { get; set; }
-
-        public List<ProductViewModel> Products { get; set; }
     }
 }

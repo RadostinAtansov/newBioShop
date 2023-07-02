@@ -2,85 +2,99 @@
 {
     using Moq;
     using Xunit;
+    using AutoMapper;
+    using BioShop.Data.Models;
     using BioShop.Controllers;
-    using BioShop.Data.ViewModels;
     using Microsoft.AspNetCore.Mvc;
     using BioShop.Data.Services.Interfaces;
+    using BioShop.Data.ViewModels.RecipeModel;
+    using BioShop.Data.ViewModels.ProductModel;
+    using BioShop.Data.ViewModels.ClientModels;
+    using BioShop.Data.ViewModels.ProductModels;
 
     public class ClientServiceTest
     {
 
         private Mock<IClientService> _clientService;
+        private readonly IMapper _mapper;
 
-        public ClientServiceTest()
+        public ClientServiceTest(IMapper mapper)
         {
             _clientService = new Mock<IClientService>();
+            _mapper = mapper;
         }
 
         [Fact]
         public async Task AddClientToDatabaseReturnSameObject()
         {
             //Arrange
-            List<ClientViewModel> clientList = await GetClientsData();
-            var newFakeClient = new ClientViewModel()
+            List<Client> clientList = await GetClientsData();
+            var fakeClient = new AddClientToShopViewModel()
             {
                 Id = 4,
                 Name = "Ivana",
                 Car = "Opela",
                 City = "Shumena",
                 Money = 123,
-                Products = new List<ProductViewModel>(),
+                //Products = new List<ProductViewModel>(),
             };
+
+            Client mapFakeClient = _mapper.Map<Client>(fakeClient);
+
             _clientService
-                .Setup(x => x.AddClient(newFakeClient))
-                .Callback(() => clientList.Add(newFakeClient))
-                .ReturnsAsync(newFakeClient);
+                .Setup(x => x.AddClient(fakeClient))
+                .Callback(() => clientList.Add(mapFakeClient))
+                .ReturnsAsync(fakeClient);
             var clientController = new ClientController(_clientService.Object);
 
             //Act
-            var clientResult = await clientController.AddClientToShop(newFakeClient);
+            var clientResult = await clientController.AddClientToShop(fakeClient);
             var clientResultModel = ((ObjectResult)clientResult).Value as ClientViewModel;
 
             //Assert
-            Assert.Equal(clientList[3], newFakeClient);
+            Assert.Equal(clientList[3], mapFakeClient);
         }
 
         [Fact]
         public async Task AddProductToClientShouldReturnCorrectResult()
         {
             //Arrange
-            List<ClientViewModel> clientList = await GetClientsData();
-            ClientViewModel newFakeClient = new ClientViewModel()
+            List<Client> clientList = await GetClientsData();
+            Client newFakeClient = new Client()
             {
                 Id = 3,
                 Name = "Ivailo",
                 Car = "BMW",
                 City = "Montana",
                 Money = 10500,
-                Products = new List<ProductViewModel>(){},
+                Clients_Products = new List<ClientProduct>()
+                /*Products = new List<ProductViewModel>(){}*/,
             };
-            ProductViewModel fakeProduct = new ProductViewModel()
+            ClientProduct fakeProduct = new ClientProduct()
             {
-                Id = 4,
-                Name = "Torta4",
-                Expires = DateTime.Now.AddDays(31),
-                Ingredients = "Choco, Milk, Eggs1",
-                Price = 12,
-                MadeInCountry = "Bg1",
-                RecipesProduct = new List<RecipeViewModel>(),
+                ClientId = 3,
+                Product = new Product()
+                {
+                    Id = 4,
+                    Name = "Torta4",
+                    Expires = DateTime.Now.AddDays(31),
+                    Ingredients = "Choco, Milk, Eggs1",
+                    Price = 12,
+                    MadeInCountry = "Bg1",
+                }
             };
             _clientService
-                .Setup(x => x.AddProductToClient(clientList[2].Products[0], clientList[2].Id))
+                .Setup(x => x.AddProductToClient(fakeProduct, clientList[2].Id))
                 .Callback(() =>
                 {
                     var client = clientList.Find(x => x.Id == 3);
-                    client.Products.Add(fakeProduct);
+                    client.Clients_Products.Add(fakeProduct);
                 });
 
             var clientController = new ClientController(_clientService.Object);
 
             //Act
-            var clientResult = await clientController.AddProductToClient(clientList[2].Products[0], clientList[2].Id);   
+            var clientResult = await clientController.AddProductToClient(fakeProduct, clientList[2].Id);   
 
             //Assert
             Assert.Equal(clientList[2].Products[3].Id, fakeProduct.Id);
@@ -99,7 +113,7 @@
                 Car = "BMW",
                 City = "Montana",
                 Money = 10500,
-                Products = new List<ProductViewModel>(){new ProductViewModel()
+                Products = new List<AllRecipesProductViewModel>(){new AllRecipesProductViewModel()
                     {
                         Id = 4,
                         Name = "Torta4",
@@ -107,7 +121,7 @@
                         Ingredients = "Choco, Milk, Eggs1",
                         Price = 12,
                         MadeInCountry = "Bg1",
-                        RecipesProduct = new List<RecipeViewModel>(),
+                        RecipesProduct = new List<AllRecipesOnProductViewModel>(),
                     }
                 }
             };
@@ -171,7 +185,7 @@
                 Car = "Opel",
                 City = "Shumen",
                 Money = 0,
-                Products = new List<ProductViewModel>(),
+                Products = new List<AllRecipesProductViewModel>(),
             };
             _clientService.Setup(x => x
             .RemoveProductFromClient(clientid, productId))
@@ -197,18 +211,18 @@
         {
             //Assert
             List<ClientViewModel> clientList = await GetClientsData();
-            int clientid = 0;
-            _clientService.Setup(x => x.ViewAllClientProducts(clientid))
+            int clientId = 0;
+            _clientService.Setup(x => x.ViewAllClientProducts(clientId))
                 .Callback(() =>
                 {
-                    var clietnEx = clientList.Find(x => x.Id == clientid);
-                    ArgumentNullException.ThrowIfNull(clietnEx);
+                    var client = clientList.Find(x => x.Id == clientId);
+                    ArgumentNullException.ThrowIfNull(client);
                 });
             var clientController = new ClientController(_clientService.Object);
 
             //Act
             //Assert
-            await Assert.ThrowsAsync<ArgumentNullException>(() => clientController.ViewAllClientProducts(clientid));
+            await Assert.ThrowsAsync<ArgumentNullException>(() => clientController.ViewAllClientProducts(clientId));
         }
 
         [Fact]
@@ -216,82 +230,92 @@
         {
             //Assert
             var clientList = await GetClientsData();
-            int clientid = 3;
-            _clientService.Setup(x => x.ViewAllClientProducts(clientid))
+            int clientId = 3;
+            _clientService.Setup(x => x.ViewAllClientProducts(clientId))
                 .ReturnsAsync(clientList[2]);
             var clientController = new ClientController(_clientService.Object);
 
             //Act
-            var clientResult = await clientController.ViewAllClientProducts(clientid);
+            var clientResult = await clientController.ViewAllClientProducts(clientId);
             var clientResultModel = ((ObjectResult)clientResult).Value as ClientViewModel;
 
             //Assert
             Assert.True(clientResultModel.Products.Count > 0);
         }
 
-        private async Task<List<ClientViewModel>> GetClientsData()
+        private async Task<List<Client>> GetClientsData()
         {
-            List<ClientViewModel> clientsData = new List<ClientViewModel>()
+            List<Client> clientsData = new List<Client>()
             {
-                new ClientViewModel()
+                new Client()
                 {
                     Id = 1,
                     Name = "Ivan",
                     Car = "Opel",
                     City = "Shumen",
                     Money = 0,
-                    Products = new List<ProductViewModel>(),
+                    Clients_Products = new List<ClientProduct>()
+                    //Products = new List<ProductViewModel>(),
                 },
-                new ClientViewModel()
+                new Client()
                 {
                     Id = 2,
                     Name = "Nikolai",
                     Car = "Audi",
                     City = "Sofia",
                     Money = 100000,
-                    Products = new List<ProductViewModel>(),
+                    Clients_Products = new List<ClientProduct>()
+                    //Products = new List<ProductViewModel>(),
                 },
-                new ClientViewModel()
+                new Client()
                 {
                     Id = 3,
                     Name = "Ivailo",
                     Car = "BMW",
                     City = "Montana",
                     Money = 10500,
-                        Products = new List<ProductViewModel>()
+                    Clients_Products = new List<ClientProduct>()
+                    {
+                        new ClientProduct()
                         {
-                            new ProductViewModel()
-                            {
-                                Id = 1,
-                                Name = "Torta1",
-                                Expires = DateTime.Now.AddDays(31),
-                                Ingredients = "Choco, Milk, Eggs1",
-                                Price = 12,
-                                MadeInCountry = "Bg1",
-                                RecipesProduct = new List<RecipeViewModel>(),
+                              ClientId = 3,
+                              ProductId = 1,
+                        }
+                    }
+                        //Products = new List<ProductViewModel>()
+                        //{
+                        //    new ProductViewModel()
+                        //    {
+                        //        Id = 1,
+                        //        Name = "Torta1",
+                        //        Expires = DateTime.Now.AddDays(31),
+                        //        Ingredients = "Choco, Milk, Eggs1",
+                        //        Price = 12,
+                        //        MadeInCountry = "Bg1",
+                        //        RecipesProduct = new List<RecipeViewModel>(),
 
-                            },
-                            new ProductViewModel()
-                            {
-                                Id = 2,
-                                Name = "Torta2",
-                                Expires = DateTime.Now.AddDays(31),
-                                Ingredients = "Choco, Milk, Eggs2",
-                                Price = 12,
-                                MadeInCountry = "Bg2",
-                                RecipesProduct = new List<RecipeViewModel>(),
-                            },
-                            new ProductViewModel()
-                            {
-                                Id = 3,
-                                Name = "Torta3",
-                                Expires = DateTime.Now.AddDays(31),
-                                Ingredients = "Choco, Milk, Eggs3",
-                                Price = 12,
-                                MadeInCountry = "Bg3",
-                                RecipesProduct = new List<RecipeViewModel>(),
-                            },
-                        },
+                        //    },
+                        //    new ProductViewModel()
+                        //    {
+                        //        Id = 2,
+                        //        Name = "Torta2",
+                        //        Expires = DateTime.Now.AddDays(31),
+                        //        Ingredients = "Choco, Milk, Eggs2",
+                        //        Price = 12,
+                        //        MadeInCountry = "Bg2",
+                        //        RecipesProduct = new List<RecipeViewModel>(),
+                        //    },
+                        //    new ProductViewModel()
+                        //    {
+                        //        Id = 3,
+                        //        Name = "Torta3",
+                        //        Expires = DateTime.Now.AddDays(31),
+                        //        Ingredients = "Choco, Milk, Eggs3",
+                        //        Price = 12,
+                        //        MadeInCountry = "Bg3",
+                        //        RecipesProduct = new List<RecipeViewModel>(),
+                        //    },
+                        //},
                 },
             };
                 return clientsData;

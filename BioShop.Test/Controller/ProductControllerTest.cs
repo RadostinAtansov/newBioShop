@@ -3,9 +3,10 @@
     using Moq;
     using Xunit;
     using BioShop.Controllers;
-    using BioShop.Data.ViewModels;
     using Microsoft.AspNetCore.Mvc;
     using BioShop.Data.Services.Interfaces;
+    using BioShop.Data.ViewModels.ProductModels;
+    using BioShop.Data.ViewModels.RecipeModel;
 
     public class ProductControllerTest
     {
@@ -25,7 +26,7 @@
 
             //Act
             var productResult = await productController.GetAllProducts();
-            var productResultModel = ((ObjectResult)productResult).Value as List<ProductViewModel>;
+            var productResultModel = ((ObjectResult)productResult).Value as List<AllRecipesProductViewModel>;
 
             //Assert
             Assert.IsType<OkObjectResult>(productResult);
@@ -43,7 +44,7 @@
 
             //Act
             var productResult = await productController.GetProductByIdAndAllHisRecipes(1);
-            var productResultModel = ((ObjectResult)productResult).Value as ProductViewModel;
+            var productResultModel = ((ObjectResult)productResult).Value as AllRecipesProductViewModel;
 
             //Assert
             Assert.IsType<OkObjectResult>(productResult);
@@ -54,14 +55,15 @@
         {
             //Arrange
             var productList = await ProductData();
-            ProductViewModel product = null;
+            AllRecipesProductViewModel product = null;
+            int productId = 23;
             _productService
-                .Setup(x => x.GetProductByIdAndAllHisRecipes(23)).ReturnsAsync(product);
+                .Setup(x => x.GetProductByIdAndAllHisRecipes(productId)).ReturnsAsync(product);
             var productController = new ProductController(_productService.Object);
 
             //Act
             var productResult = await productController.GetProductByIdAndAllHisRecipes(23);
-            var productResultModel = ((ObjectResult)productResult).Value as ProductViewModel;
+            var productResultModel = ((ObjectResult)productResult).Value as AllRecipesProductViewModel;
 
             //Assert
             Assert.IsType<BadRequestObjectResult>(productResult);
@@ -79,7 +81,7 @@
 
             //Act
             var productResult = await productController.AddProductToShop(productList[0]);
-            var productResultModel = ((ObjectResult)productResult).Value as List<ProductViewModel>;
+            var productResultModel = ((ObjectResult)productResult).Value as List<AllRecipesProductViewModel>;
 
             //Assert
             Assert.IsType<OkObjectResult>(productResult);
@@ -91,7 +93,7 @@
             //Arrange
             var productList = await ProductData();
 
-            ProductViewModel product = new ProductViewModel()
+            AllRecipesProductViewModel product = new AllRecipesProductViewModel()
             {
                 Id = 1,
                 Name = "Torta4",
@@ -108,7 +110,7 @@
 
             //Act
             var productResult = await productController.UpdateProduct(1, productList[0]);
-            var productResultModel = ((ObjectResult)productResult).Value as ProductViewModel;
+            var productResultModel = ((ObjectResult)productResult).Value as AllRecipesProductViewModel;
 
             //Assert
             Assert.IsType<OkObjectResult>(productResult);
@@ -131,11 +133,11 @@
             Assert.IsType<OkResult>(productResult);
         }
         
-        private async Task<List<ProductViewModel>> ProductData()
+        private async Task<List<AllRecipesProductViewModel>> ProductData()
         {
-            List<ProductViewModel> productList = new List<ProductViewModel>()
+            List<AllRecipesProductViewModel> productList = new List<AllRecipesProductViewModel>()
                 {
-                    new ProductViewModel()
+                    new AllRecipesProductViewModel()
                     {
                         Id = 1,
                         Name = "Torta1",
@@ -143,10 +145,10 @@
                         Ingredients = "Choco, Milk, Eggs1",
                         Price = 12,
                         MadeInCountry = "Bg1",
-                        RecipesProduct = new List<RecipeViewModel>(),
+                        RecipesProduct = new List<AllRecipesOnProductViewModel>(),
 
                     },
-                    new ProductViewModel()
+                    new AllRecipesProductViewModel()
                     {
                         Id = 2,
                         Name = "Torta2",
@@ -154,9 +156,9 @@
                         Ingredients = "Choco, Milk, Eggs2",
                         Price = 12,
                         MadeInCountry = "Bg2",
-                        RecipesProduct = new List<RecipeViewModel>(),
+                        RecipesProduct = new List<AllRecipesOnProductViewModel>(),
                     },
-                    new ProductViewModel()
+                    new AllRecipesProductViewModel()
                     {
                         Id = 3,
                         Name = "Torta3",
@@ -164,7 +166,7 @@
                         Ingredients = "Choco, Milk, Eggs3",
                         Price = 12,
                         MadeInCountry = "Bg3",
-                        RecipesProduct = new List<RecipeViewModel>(),
+                        RecipesProduct = new List<AllRecipesOnProductViewModel>(),
                     },
                 };
             return productList;

@@ -1,8 +1,9 @@
 ﻿namespace BioShop.Controllers
 {
-    using BioShop.Data.ViewModels;
     using Microsoft.AspNetCore.Mvc;
     using BioShop.Data.Services.Interfaces;
+    using BioShop.Data.ViewModels.ClientModels;
+    using BioShop.Data.ViewModels.ProductModels;
 
     [Route("api/[controller]")]
     [ApiController]
@@ -24,7 +25,7 @@
         }
 
         [HttpPost("add-client-to-shop")]
-        public async Task<IActionResult> AddClientToShop([FromBody] ClientViewModel client)
+        public async Task<IActionResult> AddClientToShop([FromBody] AddClientToShopViewModel client)
         {
             ArgumentNullException.ThrowIfNull(client);
 
@@ -34,7 +35,7 @@
         }
 
         [HttpPost("add-product-to-client/{id}")]
-        public async Task<IActionResult> AddProductToClient([FromBody] ProductViewModel client, int id)
+        public async Task<IActionResult> AddProductToClient([FromBody] AddProductProductViewModel client, int id)
         {
             ArgumentNullException.ThrowIfNull(client);
 

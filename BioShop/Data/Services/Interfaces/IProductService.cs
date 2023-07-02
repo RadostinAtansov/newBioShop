@@ -1,17 +1,17 @@
 ﻿namespace BioShop.Data.Services.Interfaces
 {
-    using BioShop.Data.ViewModels;
+    using BioShop.Data.ViewModels.ProductModels;
 
     public interface IProductService
     {
          Task DeleteProductById(int id);
 
-         Task<IEnumerable<ProductViewModel>> GetAllProducts();
+         Task<IEnumerable<AllRecipesProductViewModel>> GetAllProducts();
 
-         Task<ProductViewModel> GetProductByIdAndAllHisRecipes(int id);
+         Task<AllRecipesProductViewModel> GetProductByIdAndAllHisRecipes(int id);
 
-         Task<IEnumerable<ProductViewModel>> AddProduct(ProductViewModel product);
+         Task<IEnumerable<AddProductProductViewModel>> AddProduct(AddProductProductViewModel product);
 
-         Task<ProductViewModel> UpdateProduct(int id, ProductViewModel newProduct);
+         Task<UpdateProductViewModel> UpdateProduct(int id, UpdateProductViewModel newProduct);
     }
 }

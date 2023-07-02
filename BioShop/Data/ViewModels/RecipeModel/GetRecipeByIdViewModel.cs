@@ -1,8 +1,6 @@
-﻿using BioShop.Data.Models;
-
-namespace BioShop.Data.ViewModels
+﻿namespace BioShop.Data.ViewModels.RecipeModel
 {
-    public class RecipeViewModel
+    public class GetRecipeByIdViewModel
     {
         public int Id { get; set; }
 
@@ -19,7 +17,5 @@ namespace BioShop.Data.ViewModels
         public double TimeYouNeedToBeMade { get; set; }
 
         public string WhitchProductBelongThisRecipe { get; set; }
-
-        public Product Product { get; set; }
     }
 }

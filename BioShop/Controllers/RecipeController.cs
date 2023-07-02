@@ -1,13 +1,13 @@
 ﻿namespace BioShop.Controllers
 {
-    using BioShop.Data.ViewModels;
     using Microsoft.AspNetCore.Mvc;
     using BioShop.Data.Services.Interfaces;
     using Microsoft.AspNetCore.Authorization;
+    using BioShop.Data.ViewModels.RecipeModel;
 
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Manager")]
+    //[Authorize(Roles = "Manager")]
     public class RecipeController : ControllerBase
     {
         private readonly IRecipeService _recipeService;
@@ -42,7 +42,7 @@
         }
 
         [HttpPost("add-recipe-to-database")]
-        public async Task<IActionResult> AddRecipeToDatabase([FromBody] RecipeViewModel recipe)
+        public async Task<IActionResult> AddRecipeToDatabase([FromBody] AddRecipeViewModel recipe)
         {
             await _recipeService.AddRecipeToDatabase(recipe);
 

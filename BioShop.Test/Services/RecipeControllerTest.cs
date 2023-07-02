@@ -4,9 +4,10 @@
     using Xunit;
     using BioShop.Controllers;
     using BioShop.Data.Models;
-    using BioShop.Data.ViewModels;
     using Microsoft.AspNetCore.Mvc;
     using BioShop.Data.Services.Interfaces;
+    using BioShop.Data.ViewModels.ProductModels;
+    using BioShop.Data.ViewModels.RecipeModel;
 
     public class RecipeControllerTest
     {
@@ -48,7 +49,7 @@
 
             //Act
             var recipeResult = await recipeController.GetRecipeById(recipeId);
-            var recipeResultModel = ((ObjectResult)recipeResult).Value as RecipeViewModel;
+            var recipeResultModel = ((ObjectResult)recipeResult).Value as AllRecipesOnProductViewModel;
 
             //Assert
             Assert.Equal(recipeList[0], recipeResultModel);         
@@ -65,7 +66,7 @@
 
             //Act
             var recipeResult = await recipeController.ShowAllRecipes();
-            var recipeResultModel = ((ObjectResult)recipeResult).Value as List<RecipeViewModel>;
+            var recipeResultModel = ((ObjectResult)recipeResult).Value as List<AllRecipesOnProductViewModel>;
 
             //Assert
             Assert.Equal(recipeList, recipeResultModel);
@@ -76,7 +77,7 @@
         {
             //Arrange
             var recipeList = await RecipeData();
-            RecipeViewModel recipe = null;
+            AllRecipesOnProductViewModel recipe = null;
             _recipeService.Setup(x => x.AddRecipeToDatabase(recipe))
                 .Throws<ArgumentNullException>();
             var recipeController = new RecipeController(_recipeService.Object);
@@ -91,7 +92,7 @@
         {
             //Arrange
             var recipeList = await RecipeData();
-            RecipeViewModel fakeRecipe = new RecipeViewModel()
+            AllRecipesOnProductViewModel fakeRecipe = new AllRecipesOnProductViewModel()
             {
                 Id = 12345678,
                 RecipeName = "Cake12345678",
@@ -231,11 +232,11 @@
             Assert.NotEqual(recipeListCountBeforDelete, recipeList.Count);
         }
 
-        private async Task<List<RecipeViewModel>> RecipeData()
+        private async Task<List<AllRecipesOnProductViewModel>> RecipeData()
         {
-            List<RecipeViewModel> recipesList = new List<RecipeViewModel>()
+            List<AllRecipesOnProductViewModel> recipesList = new List<AllRecipesOnProductViewModel>()
             {
-                new RecipeViewModel()
+                new AllRecipesOnProductViewModel()
                 {
                     Id = 1,
                     RecipeName = "Cake1",
@@ -247,7 +248,7 @@
                     WhitchProductBelongThisRecipe = "Chocolate Cake",
 
                 },
-                new RecipeViewModel()
+                new AllRecipesOnProductViewModel()
                 {
                     Id = 2,
                     RecipeName = "Cake2",
@@ -263,7 +264,7 @@
                             Name = "Torta"
                         }
                 },
-                new RecipeViewModel()
+                new AllRecipesOnProductViewModel()
                 {
                     Id = 3,
                     RecipeName = "Cake3",
@@ -278,11 +279,11 @@
             return recipesList;
         }
 
-        private async Task<List<ProductViewModel>> ProductData()
+        private async Task<List<AllRecipesProductViewModel>> ProductData()
         {
-            List<ProductViewModel> productList = new List<ProductViewModel>()
+            List<AllRecipesProductViewModel> productList = new List<AllRecipesProductViewModel>()
                 {
-                    new ProductViewModel()
+                    new AllRecipesProductViewModel()
                     {
                         Id = 1,
                         Name = "Torta1",
@@ -290,10 +291,10 @@
                         Ingredients = "Choco, Milk, Eggs1",
                         Price = 12,
                         MadeInCountry = "Bg1",
-                        RecipesProduct = new List<RecipeViewModel>(),
+                        RecipesProduct = new List<AllRecipesOnProductViewModel>(),
 
                     },
-                    new ProductViewModel()
+                    new AllRecipesProductViewModel()
                     {
                         Id = 2,
                         Name = "Torta2",
@@ -301,9 +302,9 @@
                         Ingredients = "Choco, Milk, Eggs2",
                         Price = 12,
                         MadeInCountry = "Bg2",
-                        RecipesProduct = new List<RecipeViewModel>(),
+                        RecipesProduct = new List<AllRecipesOnProductViewModel>(),
                     },
-                    new ProductViewModel()
+                    new AllRecipesProductViewModel()
                     {
                         Id = 3,
                         Name = "Torta3",
@@ -311,19 +312,19 @@
                         Ingredients = "Choco, Milk, Eggs3",
                         Price = 12,
                         MadeInCountry = "Bg3",
-                        RecipesProduct = new List<RecipeViewModel>()
+                        RecipesProduct = new List<AllRecipesOnProductViewModel>()
                         {
-                            new RecipeViewModel()
+                            new AllRecipesOnProductViewModel()
                             {
                                 Id = 1,
                                 RecipeName = "IceCream"
                             },
-                            new RecipeViewModel()
+                            new AllRecipesOnProductViewModel()
                             {
                                 Id = 2,
                                 RecipeName = "Cake"
                             },
-                            new RecipeViewModel()
+                            new AllRecipesOnProductViewModel()
                             {
                                 Id = 3,
                                 RecipeName = "Chocolate"

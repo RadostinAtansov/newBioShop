@@ -1,6 +1,6 @@
 ﻿namespace BioShop.Data.Services.Interfaces
 {
-    using BioShop.Data.ViewModels;
+    using BioShop.Data.ViewModels.UserModels;
 
     public interface IAuthorizationUserService
     {

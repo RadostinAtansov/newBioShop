@@ -1,4 +1,4 @@
-﻿namespace BioShop.Data.ViewModels
+﻿namespace BioShop.Data.ViewModels.UserModels
 {
     public class UserDTO
     {

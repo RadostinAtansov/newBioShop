@@ -3,9 +3,9 @@
     using Moq;
     using Xunit;
     using BioShop.Controllers;
-    using BioShop.Data.ViewModels;
     using Microsoft.AspNetCore.Mvc;
     using BioShop.Data.Services.Interfaces;
+    using BioShop.Data.ViewModels.UserModels;
 
     public class AuthorizationControllerTest
     {

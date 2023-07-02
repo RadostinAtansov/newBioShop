@@ -1,13 +1,13 @@
 ﻿namespace BioShop.Controllers
 {
-    using BioShop.Data.ViewModels;
     using Microsoft.AspNetCore.Mvc;
     using BioShop.Data.Services.Interfaces;
     using Microsoft.AspNetCore.Authorization;
+    using BioShop.Data.ViewModels.ProductModels;
 
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Client")]
+    //[Authorize(Roles = "Client")]
     public class ProductController : ControllerBase
     {
         private readonly IProductService _productService;
@@ -25,7 +25,7 @@
             return Ok(allProducts);
         }
 
-        [HttpGet("get-product-by-id/{id}")]
+        [HttpGet("get-product-by-and-all-his-recipes-id/{id}")]
         public async Task<IActionResult> GetProductByIdAndAllHisRecipes(int id)
         {
             var product = await _productService.GetProductByIdAndAllHisRecipes(id);
@@ -41,7 +41,7 @@
         }
 
         [HttpPost("add-product-to-shop")]
-        public async Task<IActionResult> AddProductToShop([FromBody] ProductViewModel product)
+        public async Task<IActionResult> AddProductToShop([FromBody] AddProductProductViewModel product)
         {
             ArgumentNullException.ThrowIfNull(product);
 
@@ -51,14 +51,14 @@
         }
 
         [HttpPut("update-product-by-id/{id}")]
-        public async Task<IActionResult> UpdateProduct(int id, [FromBody] ProductViewModel product)
+        public async Task<IActionResult> UpdateProduct(int id, [FromBody] UpdateProductViewModel product)
         {
             var updatedProduct = await _productService.UpdateProduct(id, product);
 
             return Ok(updatedProduct);
         }
 
-        [HttpDelete("delete-product-by-id")]
+        [HttpDelete("delete-product-by-id/{id}")]
         public async Task<IActionResult> DeleteProductById(int id)
         {
             await _productService.DeleteProductById(id);

@@ -3,12 +3,12 @@
     using System.Text;
     using BioShop.Data.Models;
     using System.Security.Claims;
-    using BioShop.Data.ViewModels;
     using System.Security.Cryptography;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.IdentityModel.Tokens;
     using System.IdentityModel.Tokens.Jwt;
     using BioShop.Data.Services.Interfaces;
+    using BioShop.Data.ViewModels.UserModels;
 
     public class AuthorizationUserService : IAuthorizationUserService
     {
@@ -24,21 +24,15 @@
 
         public async Task<UserDTO> Login(UserDTO userRequest)
         {
-            var user = await  _dataContext.Users.FirstOrDefaultAsync(n => n.Username == userRequest.Username);
+            var user = await _dataContext.Users.FirstOrDefaultAsync(n => n.Username == userRequest.Username);
 
             ArgumentNullException.ThrowIfNull(user, "User not found");
-
-            //if (user == null)
-            //{
-            //    return "User not found";
-            //}
 
             bool result = await VerifyPasswordHash(userRequest.Password, user.PasswordHash, user.PasswordSalt, userRequest);
 
             if (!result)
             {
                 throw new ArgumentException("Wrong Password");
-                //return "Wrong Password";
             }
 
             string token = CreateToken(user);

@@ -3,9 +3,9 @@
     using Moq;
     using Xunit;
     using BioShop.Data.Models;
-    using BioShop.Data.ViewModels;
     using Microsoft.AspNetCore.Mvc;
     using BioShop.Data.Services.Interfaces;
+    using BioShop.Data.ViewModels.RecipeModel;
 
     public class RecipeControllerTest
     {
@@ -24,7 +24,7 @@
 
             //Act
             var repiceResult = await recipesController.GetRecipeById(1);
-            var reciperRecultModel = ((ObjectResult)repiceResult).Value as RecipeViewModel;
+            var reciperRecultModel = ((ObjectResult)repiceResult).Value as AllRecipesOnProductViewModel;
 
             //Assert
             Assert.IsType<OkObjectResult>(repiceResult);
@@ -41,7 +41,7 @@
 
             //Act
             var repiceResult = await recipesController.ShowAllRecipes();
-            var reciperRecultModel = ((ObjectResult)repiceResult).Value as List<RecipeViewModel>;
+            var reciperRecultModel = ((ObjectResult)repiceResult).Value as List<AllRecipesOnProductViewModel>;
 
             //Assert
             Assert.IsType<OkObjectResult>(repiceResult);
@@ -96,11 +96,11 @@
             Assert.IsType<OkResult>(repiceResult);
         }
 
-        private async Task<List<RecipeViewModel>> GetRecipeData()
+        private async Task<List<AllRecipesOnProductViewModel>> GetRecipeData()
         {
-            List<RecipeViewModel> recipesList = new List<RecipeViewModel>()
+            List<AllRecipesOnProductViewModel> recipesList = new List<AllRecipesOnProductViewModel>()
             {
-                new RecipeViewModel()
+                new AllRecipesOnProductViewModel()
                 {
                     Id = 1,
                     RecipeName = "Cake1",
@@ -112,7 +112,7 @@
                     WhitchProductBelongThisRecipe = "Chocolate Cake",
                     
                 },
-                new RecipeViewModel()
+                new AllRecipesOnProductViewModel()
                 {
                     Id = 2,
                     RecipeName = "Cake2",
@@ -128,7 +128,7 @@
                             Name = "Torta"
                         }
                 },
-                new RecipeViewModel()
+                new AllRecipesOnProductViewModel()
                 {
                     Id = 3,
                     RecipeName = "Cake3",
