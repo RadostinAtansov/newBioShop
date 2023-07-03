@@ -4,7 +4,7 @@
     {
         public int Id { get; set; }
 
-        public string RecipeName { get; set; }
+        public string ProductName { get; set; }
 
         public int Portions { get; set; }
 

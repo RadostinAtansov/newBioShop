@@ -7,21 +7,30 @@
     using BioShop.Data.Services.Interfaces;
     using BioShop.Data.ViewModels.ProductModels;
     using BioShop.Data.ViewModels.RecipeModel;
+    using BioShop.Data.Models;
+    using AutoMapper;
+    using FakeItEasy;
 
     public class ProductControllerTest
     {
         private readonly Mock<IProductService> _productService;
+        private readonly IMapper _mapper;
 
-        public ProductControllerTest() => _productService = new Mock<IProductService>();
+        public ProductControllerTest()
+        {
+            _productService = new Mock<IProductService>();
+            _mapper = A.Fake<IMapper>();
+        }
 
         [Fact]
         public async Task GetAllProductReturnAllProducts()
         {
             //Assert
             var productList = await ProductData();
+            var AllRecipes = _mapper.Map<List<AllRecipesProductViewModel>>(productList);
             _productService
                 .Setup(x => x.GetAllProducts())
-                .ReturnsAsync(productList);
+                .ReturnsAsync(AllRecipes);
             var productController = new ProductController(_productService.Object);
 
             //Act
@@ -37,9 +46,10 @@
         {
             //Arrange
             var productList = await ProductData();
+            var fakeProduct = _mapper.Map<AllRecipesProductViewModel>(productList);
             _productService
                 .Setup(x => x.GetProductByIdAndAllHisRecipes(1))
-                .ReturnsAsync(productList[0]);
+                .ReturnsAsync(fakeProduct);
             var productController = new ProductController(_productService.Object);
 
             //Act
@@ -74,13 +84,15 @@
         {
             //Arrange
             var productList = await ProductData();
+            var fakeProduct = _mapper.Map<AddProductViewModel>(productList[2]);
+            var fakeProductList = _mapper.Map<List<AddProductViewModel>>(productList);
             _productService
-                .Setup(x => x.AddProduct(productList[0]))
-                .ReturnsAsync(productList);
+                .Setup(x => x.AddProduct(fakeProduct))
+                .ReturnsAsync(fakeProductList);
             var productController = new ProductController(_productService.Object);
 
             //Act
-            var productResult = await productController.AddProductToShop(productList[0]);
+            var productResult = await productController.AddProductToShop(fakeProduct);
             var productResultModel = ((ObjectResult)productResult).Value as List<AllRecipesProductViewModel>;
 
             //Assert
@@ -93,7 +105,9 @@
             //Arrange
             var productList = await ProductData();
 
-            AllRecipesProductViewModel product = new AllRecipesProductViewModel()
+            var productUpdate = _mapper.Map<UpdateProductViewModel>(productList[2]);
+
+            UpdateProductViewModel product = new UpdateProductViewModel()
             {
                 Id = 1,
                 Name = "Torta4",
@@ -104,12 +118,12 @@
             };
 
             _productService
-                .Setup(x => x.UpdateProduct(1, productList[0]))
+                .Setup(x => x.UpdateProduct(1, productUpdate))
                 .ReturnsAsync(product);
             var productController = new ProductController(_productService.Object);
 
             //Act
-            var productResult = await productController.UpdateProduct(1, productList[0]);
+            var productResult = await productController.UpdateProduct(1, productUpdate);
             var productResultModel = ((ObjectResult)productResult).Value as AllRecipesProductViewModel;
 
             //Assert
@@ -120,7 +134,7 @@
         public async Task DeleteProductAndReturnOkObjectResult()
         {
             //Arrange
-            var productList = await ProductData(); 
+            var productList = await ProductData();
 
             _productService
                 .Setup(x => x.DeleteProductById(1));
@@ -132,12 +146,12 @@
             //Assert
             Assert.IsType<OkResult>(productResult);
         }
-        
-        private async Task<List<AllRecipesProductViewModel>> ProductData()
+
+        private async Task<List<Product>> ProductData()
         {
-            List<AllRecipesProductViewModel> productList = new List<AllRecipesProductViewModel>()
+            List<Product> productList = new List<Product>()
                 {
-                    new AllRecipesProductViewModel()
+                    new Product()
                     {
                         Id = 1,
                         Name = "Torta1",
@@ -145,10 +159,10 @@
                         Ingredients = "Choco, Milk, Eggs1",
                         Price = 12,
                         MadeInCountry = "Bg1",
-                        RecipesProduct = new List<AllRecipesOnProductViewModel>(),
-
+                        Clients_Products = new List<ClientProduct>(),
+                        Recipes = new List<Recipe>()
                     },
-                    new AllRecipesProductViewModel()
+                    new Product()
                     {
                         Id = 2,
                         Name = "Torta2",
@@ -156,9 +170,10 @@
                         Ingredients = "Choco, Milk, Eggs2",
                         Price = 12,
                         MadeInCountry = "Bg2",
-                        RecipesProduct = new List<AllRecipesOnProductViewModel>(),
+                        Clients_Products = new List<ClientProduct>(),
+                        Recipes = new List<Recipe>()
                     },
-                    new AllRecipesProductViewModel()
+                    new Product()
                     {
                         Id = 3,
                         Name = "Torta3",
@@ -166,7 +181,8 @@
                         Ingredients = "Choco, Milk, Eggs3",
                         Price = 12,
                         MadeInCountry = "Bg3",
-                        RecipesProduct = new List<AllRecipesOnProductViewModel>(),
+                        Clients_Products = new List<ClientProduct>(),
+                        Recipes = new List<Recipe>()
                     },
                 };
             return productList;

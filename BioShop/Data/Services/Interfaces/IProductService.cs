@@ -10,7 +10,7 @@
 
          Task<AllRecipesProductViewModel> GetProductByIdAndAllHisRecipes(int id);
 
-         Task<IEnumerable<AddProductProductViewModel>> AddProduct(AddProductProductViewModel product);
+         Task<IEnumerable<AddProductViewModel>> AddProduct(AddProductViewModel product);
 
          Task<UpdateProductViewModel> UpdateProduct(int id, UpdateProductViewModel newProduct);
     }

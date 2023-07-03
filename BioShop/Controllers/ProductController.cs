@@ -41,7 +41,7 @@
         }
 
         [HttpPost("add-product-to-shop")]
-        public async Task<IActionResult> AddProductToShop([FromBody] AddProductProductViewModel product)
+        public async Task<IActionResult> AddProductToShop([FromBody] AddProductViewModel product)
         {
             ArgumentNullException.ThrowIfNull(product);
 

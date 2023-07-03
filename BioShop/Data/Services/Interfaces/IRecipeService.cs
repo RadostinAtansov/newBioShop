@@ -6,7 +6,7 @@
     {
         Task DeleteRecipe(int id);
 
-        Task<AllRecipesOnProductViewModel> GetRecipeById(int id);
+        Task<GetRecipeByIdViewModel> GetRecipeById(int id);
 
         Task AddRecipeToDatabase(AddRecipeViewModel recipe);
 

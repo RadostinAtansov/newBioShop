@@ -31,7 +31,7 @@
             return returnAddedClient;
         }
 
-        public async Task AddProductToClient(AddProductProductViewModel product, int id)
+        public async Task AddProductToClient(AddProductViewModel product, int id)
         {
             Product newProduct = _mapper.Map<Product>(product);
 
@@ -52,13 +52,13 @@
             await _dataContext.SaveChangesAsync();
         }
 
-        public async Task<GetClienttyIdViewModel> GetClientByIdFromDb(int id)
+        public async Task<GetClientIdViewModel> GetClientByIdFromDb(int id)
         {
             var client = await _dataContext.Clients.FindAsync(id);
 
             ArgumentNullException.ThrowIfNull(client, "Not Found");
 
-            GetClienttyIdViewModel newClient = _mapper.Map<GetClienttyIdViewModel>(client);
+            GetClientIdViewModel newClient = _mapper.Map<GetClientIdViewModel>(client);
 
             return newClient;
         }
@@ -74,14 +74,14 @@
             await _dataContext.SaveChangesAsync();
         }
 
-        public async Task<ClientViewModel> ViewAllClientProducts(int id)
+        public async Task<GetClientAndAllHisProductsViewModel> ViewAllClientProducts(int id)
         {
             Client? client = await _dataContext.Clients.FindAsync(id);
 
             ArgumentNullException.ThrowIfNull(client);
 
-            ClientViewModel? clientProducts = await _dataContext.Clients.Where(c => c.Id == client.Id)
-                    .Select(c => new ClientViewModel()
+            GetClientAndAllHisProductsViewModel? clientProducts = await _dataContext.Clients.Where(c => c.Id == client.Id)
+                    .Select(c => new GetClientAndAllHisProductsViewModel()
                     {
                         Id = c.Id,
                         Name = c.Name,
@@ -101,5 +101,9 @@
 
             return clientProducts;
         }
+
+        
     }
 }
+
+//ApplicationBuilder.service.config<class>(ApplicationBuilder.configuration.getSection("appsetting"))

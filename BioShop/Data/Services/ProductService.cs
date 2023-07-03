@@ -19,7 +19,7 @@
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<AddProductProductViewModel>> AddProduct([FromBody] AddProductProductViewModel product)
+        public async Task<IEnumerable<AddProductViewModel>> AddProduct([FromBody] AddProductViewModel product)
         {
             var newProduct = new Product()
             {
@@ -36,11 +36,11 @@
 
             var allProducts = await _dataContext.Products.ToListAsync();
 
-            List<AddProductProductViewModel> productViewModelAddProducts = new List<AddProductProductViewModel>() { };
+            List<AddProductViewModel> productViewModelAddProducts = new List<AddProductViewModel>() { };
 
             foreach (var productItem in allProducts)
             {
-                var returnProducts = new AddProductProductViewModel()
+                var returnProducts = new AddProductViewModel()
                 {
                     Id = productItem.Id,
                     Name = productItem.Name,
@@ -77,11 +77,11 @@
                     Id = n.Id,
                     Size = n.Size,
                     Portions = n.Portions,
-                    RecipeName = n.ProductName,
+                    ProductName = n.ProductName,
                     TimeYouNeedToBeMade = n.TimeYouNeedToBeMade,
                     NecesseryProductsAndQuantity = n.NecesseryProductsAndQuantity,
                     DesciptionStepByStepHowToBeMade = n.DesciptionStepByStepHowToBeMade,
-                    WhitchProductBelongThisRecipe = _dataContext.Products.FindAsync(productId).Result.Name,
+                    //WhitchProductBelongThisRecipe = _dataContext.Products.FindAsync(productId).Result.Name,
                 }).ToList()
 
             }).FirstOrDefaultAsync();

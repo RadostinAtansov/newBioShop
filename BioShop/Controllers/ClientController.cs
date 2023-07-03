@@ -35,7 +35,7 @@
         }
 
         [HttpPost("add-product-to-client/{id}")]
-        public async Task<IActionResult> AddProductToClient([FromBody] AddProductProductViewModel client, int id)
+        public async Task<IActionResult> AddProductToClient([FromBody] AddProductViewModel client, int id)
         {
             ArgumentNullException.ThrowIfNull(client);
 

@@ -1,6 +1,6 @@
 ﻿namespace BioShop.Data.ViewModels.ProductModels
 {
-    public class AddProductProductViewModel
+    public class AddProductViewModel
     {
         public int Id { get; set; }
 

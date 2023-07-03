@@ -14,19 +14,21 @@
             //Client
             CreateMap<AddClientToShopViewModel, Client>(); // Yes
             CreateMap<Client, AddClientToShopViewModel>(); // Yes
-            CreateMap<Client, GetClienttyIdViewModel>(); // yes
+            CreateMap<Client, GetClientIdViewModel>(); // yes
+            CreateMap<Client, GetClientAndAllHisProductsViewModel>(); // yes
 
             //Product
-            //CreateMap<ProductViewModelAddProduct, Product>(); // Yes
-            //CreateMap<List<Product>, List<ProductViewModelAddProduct>>(); // Yes
             CreateMap<AllRecipesProductViewModel, Product>();
             CreateMap<Product, AllRecipesProductViewModel>();
 
-            //var config = new MapperConfiguration(cfg =>
-            //{
-            //    cfg.CreateMap<Client, ClientViewModel>();
-            //    cfg.CreateMap<ClientProduct, ProductViewModel>();
-            //});
+            //Recipe
+            //CreateMap<Recipe, AllRecipesOnProductViewModel>();
+
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<Client, GetClientAndAllHisProductsViewModel>();
+                cfg.CreateMap<ClientProduct, AllRecipesProductViewModel>();
+            });
         }
     }
 }

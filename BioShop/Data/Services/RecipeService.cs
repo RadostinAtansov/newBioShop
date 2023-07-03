@@ -49,7 +49,7 @@
                 Id = recipe.Id,
                 Size = recipe.Size,
                 Portions = recipe.Portions,
-                ProductName = recipe.RecipeName,
+                ProductName = recipe.ProductName,
                 TimeYouNeedToBeMade = recipe.TimeYouNeedToBeMade,
                 NecesseryProductsAndQuantity = recipe.NecesseryProductsAndQuantity,
                 DesciptionStepByStepHowToBeMade = recipe.DesciptionStepByStepHowToBeMade,
@@ -64,26 +64,26 @@
             var allRecipes = await _dataContext.Recipes.Select(n => new AllRecipesOnProductViewModel()
             {
                 Id = n.Id,
-                RecipeName = n.ProductName,
+                ProductName = n.ProductName,
                 Size = n.Size,
                 Portions = n.Portions,
                 DesciptionStepByStepHowToBeMade = n.DesciptionStepByStepHowToBeMade,
                 TimeYouNeedToBeMade = n.TimeYouNeedToBeMade,
                 NecesseryProductsAndQuantity = n.NecesseryProductsAndQuantity,
-                WhitchProductBelongThisRecipe = n.CurrentProduct.Name,
+                //WhitchProductBelongThisRecipe = n.CurrentProduct.Name,
             }).ToListAsync();
 
             return allRecipes;
         }
 
-        public async Task<AllRecipesOnProductViewModel> GetRecipeById(int id)
+        public async Task<GetRecipeByIdViewModel> GetRecipeById(int id)
         {
-            var recipe = await _dataContext.Recipes.Where(i => i.Id == id).Select(n => new AllRecipesOnProductViewModel()
+            var recipe = await _dataContext.Recipes.Where(i => i.Id == id).Select(n => new GetRecipeByIdViewModel()
             {
                 Id = n.Id,
                 Size = n.Size,
                 Portions = n.Portions,
-                RecipeName = n.ProductName,
+                ProductName = n.ProductName,
                 TimeYouNeedToBeMade = n.TimeYouNeedToBeMade,
                 NecesseryProductsAndQuantity = n.NecesseryProductsAndQuantity,
                 DesciptionStepByStepHowToBeMade = n.DesciptionStepByStepHowToBeMade,

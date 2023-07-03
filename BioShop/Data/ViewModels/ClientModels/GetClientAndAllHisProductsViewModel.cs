@@ -3,7 +3,7 @@
 
     using BioShop.Data.ViewModels.ProductModels;
 
-    public class ClientViewModel
+    public class GetClientAndAllHisProductsViewModel
     {
         public int Id { get; set; }
 

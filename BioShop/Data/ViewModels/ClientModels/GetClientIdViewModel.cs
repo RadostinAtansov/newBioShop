@@ -1,7 +1,7 @@
 ﻿namespace BioShop.Data.ViewModels.ClientModels
 {
 
-    public class GetClienttyIdViewModel
+    public class GetClientIdViewModel
     {
         public string Name { get; set; }
 

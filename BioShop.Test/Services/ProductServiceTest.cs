@@ -7,14 +7,19 @@
     using BioShop.Data.Services.Interfaces;
     using BioShop.Data.ViewModels.ProductModels;
     using BioShop.Data.ViewModels.RecipeModel;
+    using BioShop.Data.Models;
+    using AutoMapper;
+    using FakeItEasy;
 
     public class ProductServiceTest
     {
         private readonly Mock<IProductService> _productService;
+        private readonly IMapper _mapper;
 
         public ProductServiceTest()
         {
             _productService = new Mock<IProductService>();
+            _mapper = A.Fake<IMapper>();
         }
 
         [Fact]
@@ -23,7 +28,7 @@
             //Arrange
             var productList = await ProductData();
             int productListCount = 3;
-            var fakeProduct = new AllRecipesProductViewModel()
+            var fakeProduct = new Product()
             {
                 Id = 4,
                 Name = "Torta4",
@@ -31,20 +36,29 @@
                 Ingredients = "Choco4, Milk4, Eggs4",
                 Price = 44,
                 MadeInCountry = "Bg4",
-                RecipesProduct = new List<AllRecipesOnProductViewModel>(),
-
             };
-            _productService.Setup(x => x.AddProduct(fakeProduct))
+            var fakeProductWithModel = new AddProductViewModel()
+            {
+                Id = 4,
+                Name = "Torta4",
+                Expires = DateTime.Now.AddDays(31),
+                Ingredients = "Choco4, Milk4, Eggs4",
+                Price = 44,
+                MadeInCountry = "Bg4",
+            };
+            var productListMapped = _mapper.Map <List<AddProductViewModel>>(productList);
+
+            _productService.Setup(x => x.AddProduct(fakeProductWithModel))
                 .Callback(() =>
                 {
                     productList.Add(fakeProduct);
                     productListCount++;
                 })
-                .ReturnsAsync(productList);
+                .ReturnsAsync(productListMapped);
             var productController = new ProductController(_productService.Object);
 
             //Act
-            var productResult = await productController.AddProductToShop(fakeProduct);
+            var productResult = await productController.AddProductToShop(fakeProductWithModel);
             var productResultModel = ((ObjectResult)productResult).Value as List<AllRecipesProductViewModel>;
 
             //Assert
@@ -58,7 +72,7 @@
         {
             //Arrange
             var productList = await ProductData();
-            AllRecipesProductViewModel fakeProduct = null;
+            AddProductViewModel fakeProduct = null;
             _productService.Setup(x => x.AddProduct(fakeProduct));  
             var productController = new ProductController(_productService.Object);
 
@@ -73,8 +87,9 @@
         {
             //Arrange
             var productList = await ProductData();
+            var allProductMapped = _mapper.Map<List<AllRecipesProductViewModel>>(productList);
             _productService.Setup(x => x.GetAllProducts())
-                .ReturnsAsync(productList);
+                .ReturnsAsync(allProductMapped);
             var productController = new ProductController(_productService.Object);
 
             //Act
@@ -82,7 +97,7 @@
             var productResultModel = ((ObjectResult)productResult).Value as List<AllRecipesProductViewModel>;
 
             //Assert
-            Assert.Equal(productList, productResultModel);
+            Assert.Equal(allProductMapped, productResultModel);
         }
 
         [Fact]
@@ -110,12 +125,33 @@
             //Arrange
             int productId = 3;
             var productList = await ProductData();
+            var returnProductRecipe = new AllRecipesProductViewModel()
+            {
+                Id = 3,
+                Name = "Torta3",
+                Expires = DateTime.Now.AddDays(31),
+                Ingredients = "Choco, Milk, Eggs3",
+                Price = 12,
+                MadeInCountry = "Bg3",
+                RecipesProduct = new List<AllRecipesOnProductViewModel>()
+                        {
+                            new AllRecipesOnProductViewModel()
+                            {
+                                Id = 1,
+                                ProductName = "test",
+                                Size = 100,
+                                Portions = 8,
+                                TimeYouNeedToBeMade = 2
+                            }
+                        }
+            };
+
             _productService.Setup(x => x.GetProductByIdAndAllHisRecipes(productId))
                 .Callback(() =>
                 {
                     var product = productList.Find(x => x.Id == productId);
                 })
-                .ReturnsAsync(productList[2]);
+                .ReturnsAsync(returnProductRecipe);
             var productController = new ProductController(_productService.Object);
 
             //Act
@@ -124,7 +160,7 @@
 
             //Assert
             Assert.Equal(productId, productList[2].Id);
-            Assert.True(productList[2].RecipesProduct.Count() > 0);
+            Assert.True(returnProductRecipe.RecipesProduct.Count() > 0);
         }
 
         [Fact]
@@ -133,7 +169,7 @@
             //Arrange
             var productList = await ProductData();
             int productId = 0;
-            var fakeProduct = new AllRecipesProductViewModel()
+            var fakeProduct = new UpdateProductViewModel()
             {
                 Id = 4,
                 Name = "Torta4",
@@ -141,8 +177,6 @@
                 Ingredients = "Choco4, Milk4, Eggs4",
                 Price = 44,
                 MadeInCountry = "Bg4",
-                RecipesProduct = new List<AllRecipesOnProductViewModel>(),
-
             };
             _productService.Setup(x => x.UpdateProduct(productId, fakeProduct))
                 .Callback(() =>
@@ -163,7 +197,7 @@
             //Arrange
             var productList = await ProductData();
             int productId = 1;
-            var fakeProduct = new AllRecipesProductViewModel()
+            var fakeProductViewModel = new UpdateProductViewModel()
             {
                 Id = 111,
                 Name = "Torta111",
@@ -171,10 +205,19 @@
                 Ingredients = "Choco111, Milk111, Eggs111",
                 Price = 111,
                 MadeInCountry = "Bg111",
-                RecipesProduct = new List<AllRecipesOnProductViewModel>(),
 
             };
-            _productService.Setup(x => x.UpdateProduct(productId, fakeProduct))
+            var fakeProduct = new Product()
+            {
+                Id = 111,
+                Name = "Torta111",
+                Expires = DateTime.Now.AddDays(31),
+                Ingredients = "Choco111, Milk111, Eggs111",
+                Price = 111,
+                MadeInCountry = "Bg111",
+
+            };
+            _productService.Setup(x => x.UpdateProduct(productId, fakeProductViewModel))
                 .Callback(() =>
                 {
                     productList[0] = fakeProduct;
@@ -182,7 +225,7 @@
             var productController = new ProductController(_productService.Object);
 
             //Act
-            var productResult = await productController.UpdateProduct(productId, fakeProduct);
+            var productResult = await productController.UpdateProduct(productId, fakeProductViewModel);
             
             //Assert
             Assert.Equal(fakeProduct, productList[0]);
@@ -235,11 +278,11 @@
             Assert.True(productList[1].Id == 2);
         }
 
-        private async Task<List<AllRecipesProductViewModel>> ProductData()
+        private async Task<List<Product>> ProductData()
         {
-            List<AllRecipesProductViewModel> productList = new List<AllRecipesProductViewModel>()
+            List<Product> productList = new List<Product>()
                 {
-                    new AllRecipesProductViewModel()
+                    new Product()
                     {
                         Id = 1,
                         Name = "Torta1",
@@ -247,10 +290,10 @@
                         Ingredients = "Choco, Milk, Eggs1",
                         Price = 12,
                         MadeInCountry = "Bg1",
-                        RecipesProduct = new List<AllRecipesOnProductViewModel>(),
-
+                        Clients_Products = new List<ClientProduct>(),
+                        Recipes = new List<Recipe>()
                     },
-                    new AllRecipesProductViewModel()
+                    new Product()
                     {
                         Id = 2,
                         Name = "Torta2",
@@ -258,9 +301,10 @@
                         Ingredients = "Choco, Milk, Eggs2",
                         Price = 12,
                         MadeInCountry = "Bg2",
-                        RecipesProduct = new List<AllRecipesOnProductViewModel>(),
+                        Clients_Products = new List<ClientProduct>(),
+                        Recipes = new List<Recipe>()
                     },
-                    new AllRecipesProductViewModel()
+                    new Product()
                     {
                         Id = 3,
                         Name = "Torta3",
@@ -268,24 +312,18 @@
                         Ingredients = "Choco, Milk, Eggs3",
                         Price = 12,
                         MadeInCountry = "Bg3",
-                        RecipesProduct = new List<AllRecipesOnProductViewModel>()
+                        Clients_Products = new List<ClientProduct>(),
+                        Recipes = new List<Recipe>()
                         {
-                            new AllRecipesOnProductViewModel() 
-                            { 
+                            new Recipe()
+                            {
                                 Id = 1,
-                                RecipeName = "IceCream"
-                            },
-                            new AllRecipesOnProductViewModel()
-                            {
-                                Id = 2,
-                                RecipeName = "Cake"
-                            },
-                            new AllRecipesOnProductViewModel()
-                            {
-                                Id = 3,
-                                RecipeName = "Chocolate"
-                            },
-                        },
+                                ProductName = "test",
+                                Size = 100,
+                                Portions = 8,
+                                TimeYouNeedToBeMade = 2
+                            }
+                        }
                     },
                 };
             return productList;
