@@ -9,7 +9,6 @@
 
     public class AuthorizationControllerTest
     {
-
         private readonly Mock<IAuthorizationUserService> _authoUserService;
 
         public AuthorizationControllerTest() => _authoUserService = new Mock<IAuthorizationUserService>();

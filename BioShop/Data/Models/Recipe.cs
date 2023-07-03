@@ -17,6 +17,6 @@
         public double TimeYouNeedToBeMade { get; set; }
 
         public int? CurrentProductId { get; set; }
-        public Product? CurrentProduct { get; set; }
+        public virtual Product? CurrentProduct { get; set; }
     }
 }

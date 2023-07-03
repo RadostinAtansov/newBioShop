@@ -36,12 +36,11 @@
             takeRecipeById.CurrentProduct = takeProductById;
             takeRecipeById.CurrentProductId = takeProductById.Id;
 
-            this._dataContext.SaveChangesAsync();
+            _dataContext.SaveChangesAsync();
         }
 
         public async Task AddRecipeToDatabase([FromBody] AddRecipeViewModel recipe)
         {
-
             ArgumentNullException.ThrowIfNull(recipe);
 
             var newRecipe = new Recipe()
