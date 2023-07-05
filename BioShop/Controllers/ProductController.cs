@@ -7,7 +7,7 @@
 
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize(Roles = "Client")]
+    [Authorize(Roles = "Client")]
     public class ProductController : ControllerBase
     {
         private readonly IProductService _productService;

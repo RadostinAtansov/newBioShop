@@ -12,17 +12,16 @@
         public AutoMapperProfile()
         {
             //Client
-            CreateMap<AddClientToShopViewModel, Client>(); // Yes
-            CreateMap<Client, AddClientToShopViewModel>(); // Yes
-            CreateMap<Client, GetClientIdViewModel>(); // yes
-            CreateMap<Client, GetClientAndAllHisProductsViewModel>(); // yes
+            CreateMap<AddClientToShopViewModel, Client>();
+            CreateMap<Client, AddClientToShopViewModel>();
+            CreateMap<Client, GetClientIdViewModel>();
+            CreateMap<Client, GetClientAndAllHisProductsViewModel>();
 
             //Product
             CreateMap<AllRecipesProductViewModel, Product>();
             CreateMap<Product, AllRecipesProductViewModel>();
 
             //Recipe
-            //CreateMap<Recipe, AllRecipesOnProductViewModel>();
 
             var config = new MapperConfiguration(cfg =>
             {

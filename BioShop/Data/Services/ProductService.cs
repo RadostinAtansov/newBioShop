@@ -81,7 +81,6 @@
                     TimeYouNeedToBeMade = n.TimeYouNeedToBeMade,
                     NecesseryProductsAndQuantity = n.NecesseryProductsAndQuantity,
                     DesciptionStepByStepHowToBeMade = n.DesciptionStepByStepHowToBeMade,
-                    //WhitchProductBelongThisRecipe = _dataContext.Products.FindAsync(productId).Result.Name,
                 }).ToList()
 
             }).FirstOrDefaultAsync();

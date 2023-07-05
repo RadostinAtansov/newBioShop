@@ -16,7 +16,7 @@
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register(UserDTO requestUser)
+        public async Task<IActionResult> Register(UserDTORegister requestUser)
         {
             var newRegisterUser = await _userService.Register(requestUser);
 
@@ -24,7 +24,7 @@
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login(UserDTO requestUser)
+        public async Task<IActionResult> Login(UserDTOLogin requestUser)
         {
             var result = await _userService.Login(requestUser);
 

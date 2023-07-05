@@ -2,11 +2,12 @@
 {
     using Microsoft.AspNetCore.Mvc;
     using BioShop.Data.Services.Interfaces;
+    using Microsoft.AspNetCore.Authorization;
     using BioShop.Data.ViewModels.RecipeModel;
 
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize(Roles = "Manager")]
+    [Authorize(Roles = "Manager")]
     public class RecipeController : ControllerBase
     {
         private readonly IRecipeService _recipeService;

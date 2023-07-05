@@ -4,8 +4,8 @@
 
     public interface IAuthorizationUserService
     {
-        Task<UserDTO> Login(UserDTO userRequest);
+        Task<UserDTOLogin> Login(UserDTOLogin userRequest);
 
-        Task<UserDTO> Register(UserDTO userRequest);
+        Task<UserDTORegister> Register(UserDTORegister userRequest);
     }
 }

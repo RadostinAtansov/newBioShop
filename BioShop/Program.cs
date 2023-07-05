@@ -7,10 +7,13 @@ using Microsoft.IdentityModel.Tokens;
 using BioShop.Data.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Swashbuckle.AspNetCore.Filters;
+using BioShop.Config;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container!
+
+
 
 builder.Services.AddControllers();
 builder.Services.AddDbContext<BioShopDataContext>(options =>
@@ -22,6 +25,9 @@ builder.Services.AddTransient<IProductService, ProductService>();
 builder.Services.AddTransient<IRecipeService, RecipeService>();
 builder.Services.AddTransient<IClientService, ClientService>();
 builder.Services.AddTransient<IAuthorizationUserService, AuthorizationUserService>();
+
+builder.Services.Configure<AppSettings>(builder.Configuration.GetSection(key: nameof(AppSettings)));
+
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

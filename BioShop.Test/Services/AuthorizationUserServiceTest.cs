@@ -18,7 +18,7 @@
         {
             //Arrange
             var userList = await UserData();
-            var fakeUser = new UserDTO()
+            var fakeUser = new UserDTORegister()
             {
                 Username = "Metla",
                 Password = "Metla123",
@@ -34,7 +34,7 @@
 
             //Act
             var userResult = await authUserController.Register(fakeUser);
-            var userResultModel = ((ObjectResult)userResult).Value as UserDTO;
+            var userResultModel = ((ObjectResult)userResult).Value as UserDTORegister;
 
             //Assert
 
@@ -47,7 +47,7 @@
         {
             //Arrange
             var userList = await UserData();
-            var fakeUser = new UserDTO()
+            var fakeUser = new UserDTOLogin()
             {
                 Username = "Shushumir",
                 Password = "Shushushu123",
@@ -71,7 +71,7 @@
         {
             //Arrange
             var userList = await UserData();
-            var fakeUser = new UserDTO()
+            var fakeUser = new UserDTOLogin()
             {
                 Username = "Admin",
                 Password = "321nimdA",
@@ -98,43 +98,43 @@
         {
             //Arrange
             var userList = await UserData();
-            var fakeUser = new UserDTO()
+            var fakeUser = new UserDTOLogin()
             {
                 Username = "Admin",
                 Password = "Admin123",
                 Role = "User"
             };
             _authUserService.Setup(x => x.Login(fakeUser))
-                .ReturnsAsync(userList[0]);
+                .ReturnsAsync(fakeUser);
             var userController = new AuthorizationController(_authUserService.Object);
 
             //Act
             var userResult = await userController.Login(fakeUser);
-            var userResultModel = ((ObjectResult)userResult).Value as UserDTO;
+            var userResultModel = ((ObjectResult)userResult).Value as UserDTOLogin;
 
             //Assert
-            Assert.Equal(userList[0], userResultModel);
+            Assert.Equal(fakeUser, userResultModel);
             Assert.True(userList[0].Role == userResultModel.Role);
             Assert.True(userList[0].Username == userResultModel.Username);
         }
 
-        private async Task<List<UserDTO>> UserData()
+        private async Task<List<UserDTORegister>> UserData()
         {
-            List<UserDTO> usersDb = new List<UserDTO>()
+            List<UserDTORegister> usersDb = new List<UserDTORegister>()
             {
-                new UserDTO()
+                new UserDTORegister()
                 {
                     Username = "Admin",
                     Password = "Admin123",
                     Role = "User"
                 },
-                new UserDTO()
+                new UserDTORegister()
                 {
                     Username = "Metla",
                     Password = "Metla123",
                     Role = "User"
                 },
-                new UserDTO()
+                new UserDTORegister()
                 {
                     Username = "Tigan",
                     Password = "Tigan123",

@@ -132,7 +132,7 @@
         public async Task GetClientByIdFromDatabaseAndReturnClientWithSameId()
         {
             //Arrange
-            var clientList = await GetClientsData();
+            List<Client> clientList = await GetClientsData();
             int clientId = 1;
             var fakeClient = clientList[0];
             var clientMap = _mapper.Map<GetClientIdViewModel>(fakeClient);
@@ -153,7 +153,7 @@
         public async Task GetClientByIdFromDatabaseWrongIdShouldThrowArgumentNullException()
         {
             //Arrange
-            var clientList = await GetClientsData();
+            List<Client> clientList = await GetClientsData();
             _clientService.Setup(x => x.GetClientByIdFromDb(0))
                 .Throws<ArgumentNullException>();
             var clientController = new ClientController(_clientService.Object);
@@ -222,7 +222,7 @@
         public async Task ViewAllClientProductsByClientIdReturnCorrectAllProductClient()
         {
             //Assert
-            var clientList = await GetClientsData();
+            List<Client> clientList = await GetClientsData();
             int clientId = 1;
             var returnFakeClient = new GetClientAndAllHisProductsViewModel()
             {

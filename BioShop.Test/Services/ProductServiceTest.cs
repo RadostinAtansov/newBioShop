@@ -26,7 +26,7 @@
         public async Task AddProductToDatabaseAndReturnCorrectResultAllProducts()
         {
             //Arrange
-            var productList = await ProductData();
+            List<Product> productList = await ProductData();
             int productListCount = 3;
             var fakeProduct = new Product()
             {
@@ -71,7 +71,7 @@
         public async Task AddProductToDatabaseAndReturnArgumentNullExceptionIfProductIsNull()
         {
             //Arrange
-            var productList = await ProductData();
+            List<Product> productList = await ProductData();
             AddProductViewModel fakeProduct = null;
             _productService.Setup(x => x.AddProduct(fakeProduct));  
             var productController = new ProductController(_productService.Object);
@@ -79,14 +79,13 @@
             //Act
             //Assert
            await Assert.ThrowsAsync<ArgumentNullException>(() => productController.AddProductToShop(fakeProduct));
-
         }
 
         [Fact]
         public async Task GetAllProductsAndReturnCorrectAllProducts()
         {
             //Arrange
-            var productList = await ProductData();
+            List<Product> productList = await ProductData();
             var allProductMapped = _mapper.Map<List<AllRecipesProductViewModel>>(productList);
             _productService.Setup(x => x.GetAllProducts())
                 .ReturnsAsync(allProductMapped);
@@ -105,7 +104,7 @@
         {
             //Arrange
             int productId = 0;
-            var productList = await ProductData();
+            List<Product> productList = await ProductData();
             _productService.Setup(x => x.GetProductByIdAndAllHisRecipes(productId))
                 .Callback(() =>
                 {
@@ -124,7 +123,7 @@
         {
             //Arrange
             int productId = 3;
-            var productList = await ProductData();
+            List<Product> productList = await ProductData();
             var returnProductRecipe = new AllRecipesProductViewModel()
             {
                 Id = 3,
@@ -167,7 +166,7 @@
         public async Task UpdateProductIfProductIdDoesNotExistThrowArgumentNullException()
         {
             //Arrange
-            var productList = await ProductData();
+            List<Product> productList = await ProductData();
             int productId = 0;
             var fakeProduct = new UpdateProductViewModel()
             {
@@ -195,7 +194,7 @@
         public async Task UpdateProductByIdAndReturnUpdatedProduct()
         {
             //Arrange
-            var productList = await ProductData();
+            List<Product> productList = await ProductData();
             int productId = 1;
             var fakeProductViewModel = new UpdateProductViewModel()
             {
@@ -240,7 +239,7 @@
         public async Task DeleteProductByIdIfDoesNotExistThrowArgumentNullException()
         {
             //Arrange
-            var productList = await ProductData();
+            List<Product> productList = await ProductData();
             int productId = 0;
             _productService.Setup(x => x.DeleteProductById(productId))
                 .Callback(() =>
@@ -259,7 +258,7 @@
         public async Task DeleteProductByIdAndCheckForCorrectReseult()
         {
             //Arrange
-            var productList = await ProductData();
+            List<Product> productList = await ProductData();
             int productId = 3;
             _productService.Setup(x => x.DeleteProductById(productId))
                 .Callback(() =>

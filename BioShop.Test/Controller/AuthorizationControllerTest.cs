@@ -18,7 +18,7 @@
         {
             //Arrange
             var userList = await UserData();
-            var fakeUser = new UserDTO()
+            var fakeUser = new UserDTORegister()
             {
                 Username = "Radul",
                 Password = "Adminuf",
@@ -45,7 +45,7 @@
             //Arrange
             var userList = await UserData();
 
-            var fakeUser = new UserDTO()
+            var fakeUser = new UserDTOLogin()
             {
                 Username = "Admin",
                 Password = "Admin123",
@@ -61,23 +61,23 @@
             Assert.IsType<OkObjectResult>(authUserResult);
         }
 
-        private async Task<List<UserDTO>> UserData()
+        private async Task<List<UserDTORegister>> UserData()
         {
-            List<UserDTO> usersDb = new List<UserDTO>() 
+            List<UserDTORegister> usersDb = new List<UserDTORegister>() 
             {
-                new UserDTO()
+                new UserDTORegister()
                 {
                     Username = "Admin",
                     Password = "Admin123",
                     Role = "User"
                 },
-                new UserDTO()
+                new UserDTORegister()
                 {
                     Username = "Metla",
                     Password = "Metla123",
                     Role = "User"
                 },
-                new UserDTO()
+                new UserDTORegister()
                 {
                     Username = "Tigan",
                     Password = "Tigan123",

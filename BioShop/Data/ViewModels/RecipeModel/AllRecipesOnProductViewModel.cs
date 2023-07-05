@@ -15,7 +15,5 @@
         public string DesciptionStepByStepHowToBeMade { get; set; }
 
         public double TimeYouNeedToBeMade { get; set; }
-
-        //public string WhitchProductBelongThisRecipe { get; set; }
     }
 }

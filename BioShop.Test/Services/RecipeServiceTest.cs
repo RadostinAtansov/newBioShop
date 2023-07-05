@@ -25,7 +25,7 @@
         public async Task GetRecipeByIdIfDoesNotExistThrowArgumentNullException()
         {
             //Arrange
-            var recipeList = await RecipeData();
+            List<Recipe> recipeList = await RecipeData();
             int recipeId = 0;
             _recipeService.Setup(x => x.GetRecipeById(recipeId))
                 .Callback(() =>
@@ -44,7 +44,7 @@
         public async Task GetRecipeByIdIfExistReturnCorrectResult()
         {
             //Arrange
-            var recipeList = await RecipeData();
+            List<Recipe> recipeList = await RecipeData();
             int recipeId = 1;
             var fakeRecipeViewModel = new GetRecipeByIdViewModel()
             {
@@ -73,7 +73,7 @@
         public async Task ShowAllRecipesReturnCorrectResultAllRecipes()
         {
             //Arrange
-            var recipeList = await RecipeData();
+            List<Recipe> recipeList = await RecipeData();
             var fakeRecipeViewModel = _mapper.Map<List<AllRecipesOnProductViewModel>>(recipeList);
 
             _recipeService.Setup(x => x.ShowAllRecipes())
@@ -92,7 +92,7 @@
         public async Task AddRecipeToDbIfRecipeIsNullThrowArgumentNullException()
         {
             //Arrange
-            var recipeList = await RecipeData();
+            List<Recipe> recipeList = await RecipeData();
             AddRecipeViewModel recipe = null;
             _recipeService.Setup(x => x.AddRecipeToDatabase(recipe))
                 .Throws<ArgumentNullException>();
@@ -107,7 +107,7 @@
         public async Task AddRecipeToDbAndCheckItIfIsThere()
         {
             //Arrange
-            var recipeList = await RecipeData();
+            List<Recipe> recipeList = await RecipeData();
             AddRecipeViewModel fakeRecipeViewModel = new AddRecipeViewModel()
             {
                 Id = 12345678,
@@ -147,8 +147,8 @@
         public async Task AddRecipeToProductIfProductIsIsNullThrowArgumentNullException()
         {
             //Arrange
-            var recipeLst = await RecipeData();
-            var productList = await ProductData();
+            List<Recipe> recipeLst = await RecipeData();
+            List<Product> productList = await ProductData();
             int productId = 0;
             int recipeId = 1;
 
@@ -169,8 +169,8 @@
         public async Task AddRecipeToProductIfRecipeIsIsNullThrowArgumentNullException()
         {
             //Arrange
-            var recipeList = await RecipeData();
-            var productList = await ProductData();
+            List<Recipe> recipeList = await RecipeData();
+            List<Product> productList = await ProductData();
             int productId = 1;
             int recipeId = 0;
 
@@ -191,8 +191,8 @@
         public async Task AddRecipeToProductIfRecipeAndProductIsNotNull()
         {
             //Arrange
-            var recipeList = await RecipeData();
-            var productList = await ProductData();
+            List<Recipe> recipeList = await RecipeData();
+            List<Product> productList = await ProductData();
             int productId = 1;
             int recipeId = 1;
 
@@ -219,7 +219,7 @@
         public async Task DeleteRecipeIfNotExistThrowArgumentNullException()
         {
             //Arrange
-            var recipeList = await RecipeData();
+            List<Recipe> recipeList = await RecipeData();
             int recipeId = 0;
             _recipeService.Setup(x => x.DeleteRecipe(recipeId))
                 .Callback(() => 
@@ -238,7 +238,7 @@
         public async Task DeleteRecipeIfNotNull()
         {
             //Arrange
-            var recipeList = await RecipeData();
+            List<Recipe> recipeList = await RecipeData();
             int recipeId = 1;
             int recipeListCountBeforDelete = recipeList.Count;
             _recipeService.Setup(x => x.DeleteRecipe(recipeId))

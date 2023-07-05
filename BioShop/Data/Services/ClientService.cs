@@ -100,10 +100,6 @@
                     }).FirstOrDefaultAsync();
 
             return clientProducts;
-        }
-
-        
+        }        
     }
 }
-
-//ApplicationBuilder.service.config<class>(ApplicationBuilder.configuration.getSection("appsetting"))

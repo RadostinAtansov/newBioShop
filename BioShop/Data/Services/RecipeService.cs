@@ -1,16 +1,18 @@
 ﻿namespace BioShop.Data.Services
 {
+    using BioShop.Config;
     using BioShop.Data.Models;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Options;
     using Microsoft.EntityFrameworkCore;
     using BioShop.Data.Services.Interfaces;
     using BioShop.Data.ViewModels.RecipeModel;
-    using Microsoft.AspNetCore.Mvc;
 
     public class RecipeService : IRecipeService
     {
         private readonly BioShopDataContext _dataContext;
 
-        public RecipeService(BioShopDataContext dataContext)
+        public RecipeService(BioShopDataContext dataContext, IOptions<AppSettings> appSettings)
         {
             _dataContext = dataContext;
         }
@@ -69,7 +71,6 @@
                 DesciptionStepByStepHowToBeMade = n.DesciptionStepByStepHowToBeMade,
                 TimeYouNeedToBeMade = n.TimeYouNeedToBeMade,
                 NecesseryProductsAndQuantity = n.NecesseryProductsAndQuantity,
-                //WhitchProductBelongThisRecipe = n.CurrentProduct.Name,
             }).ToListAsync();
 
             return allRecipes;

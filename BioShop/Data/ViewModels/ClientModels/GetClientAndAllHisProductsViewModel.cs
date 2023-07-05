@@ -1,6 +1,5 @@
 ﻿namespace BioShop.Data.ViewModels.ProductModel
 {
-
     using BioShop.Data.ViewModels.ProductModels;
 
     public class GetClientAndAllHisProductsViewModel

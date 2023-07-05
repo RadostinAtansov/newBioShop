@@ -9,20 +9,25 @@
     using System.IdentityModel.Tokens.Jwt;
     using BioShop.Data.Services.Interfaces;
     using BioShop.Data.ViewModels.UserModels;
+    using BioShop.Config;
+    using Microsoft.Extensions.Options;
 
     public class AuthorizationUserService : IAuthorizationUserService
     {
         private readonly BioShopDataContext _dataContext;
-        private readonly IConfiguration _configuration;
+        //private readonly IConfiguration _configuration;
+        private readonly AppSettings _appSettings;
 
         public AuthorizationUserService(BioShopDataContext dataContext, 
-                                        IConfiguration configuration)
+                                        IConfiguration configuration,
+                                        IOptions<AppSettings> appSettings)
         {
             _dataContext = dataContext;
-            _configuration = configuration;
+            //_configuration = configuration;
+            _appSettings = appSettings.Value;
         }
 
-        public async Task<UserDTO> Login(UserDTO userRequest)
+        public async Task<UserDTOLogin> Login(UserDTOLogin userRequest)
         {
             var user = await _dataContext.Users.FirstOrDefaultAsync(n => n.Username == userRequest.Username);
 
@@ -37,17 +42,18 @@
 
             string token = CreateToken(user);
 
-            var loggedUser = new UserDTO()
+            var loggedUser = new UserDTOLogin()
             {
-                Username = user.Username,
+                Username = user.Username,              
                 Role = user.Role,
                 Token = token,
+               
             };
 
             return loggedUser;
         }
 
-        public async Task<UserDTO> Register(UserDTO userRequest)
+        public async Task<UserDTORegister> Register(UserDTORegister userRequest)
         {
             CreatePasswordHash(userRequest.Password, out byte[] passwordHash, out byte[] passwordSalt);
 
@@ -73,7 +79,7 @@
                 new Claim(ClaimTypes.Role, user.Role),
             };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appSettings.Token));
 
             var credential = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
@@ -87,7 +93,7 @@
             return jwt;
         }
 
-        private async Task<bool> VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt, UserDTO userRequest)
+        private async Task<bool> VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt, UserDTOLogin userRequest)
         {
             var user = await _dataContext.Users.FirstOrDefaultAsync(n => n.Username == userRequest.Username);
 
